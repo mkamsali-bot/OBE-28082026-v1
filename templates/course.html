@@ -1,0 +1,661 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ================= Header ================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="mb-1">
+
+                <i class="bi bi-journal-bookmark-fill text-primary"></i>
+
+                Course Master
+
+            </h2>
+
+            <small class="text-muted">
+
+                Add, Edit and Manage Courses
+
+            </small>
+
+        </div>
+
+        <a href="/masters" class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back to Masters
+
+        </a>
+
+    </div>
+
+    <!-- ================= Messages ================= -->
+
+    {% if message %}
+
+    <div class="alert alert-success alert-dismissible fade show">
+
+        {{ message }}
+
+        <button class="btn-close"
+                data-bs-dismiss="alert"></button>
+
+    </div>
+
+    {% endif %}
+
+    {% if error %}
+
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        {{ error }}
+
+        <button class="btn-close"
+                data-bs-dismiss="alert"></button>
+
+    </div>
+
+    {% endif %}
+
+    <!-- ================= Course Form ================= -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+
+                {% if edit_course %}
+
+                    Edit Course
+
+                {% else %}
+
+                    Add New Course
+
+                {% endif %}
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="post" action="/course/save">
+
+                <input type="hidden"
+                       name="id"
+                       value="{{ edit_course.id if edit_course else '' }}">
+
+                <div class="row">
+                                        <!-- ================= Course Code ================= -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Course Code <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="course_code"
+                            maxlength="20"
+                            required
+                            value="{{ edit_course.course_code if edit_course else '' }}">
+
+                    </div>
+
+
+                    <!-- ================= Course Name ================= -->
+
+                    <div class="col-md-5 mb-3">
+
+                        <label class="form-label">
+
+                            Course Name <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="course_name"
+                            required
+                            value="{{ edit_course.course_name if edit_course else '' }}">
+
+                    </div>
+
+
+                    <!-- ================= Credits ================= -->
+
+                    <div class="col-md-2 mb-3">
+
+                        <label class="form-label">
+
+                            Credits <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="credits"
+                            min="1"
+                            max="10"
+                            required
+                            value="{{ edit_course.credits if edit_course else '' }}">
+
+                    </div>
+
+
+                    <!-- ================= Course Type ================= -->
+
+                    <div class="col-md-2 mb-3">
+
+                        <label class="form-label">
+
+                            Course Type
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="course_type">
+
+                            <option value="Theory"
+                                {% if edit_course and edit_course.course_type=="Theory" %}selected{% endif %}>
+                                Theory
+                            </option>
+
+                            <option value="Theory + Practical"
+                                {% if edit_course and edit_course.course_type=="Theory + Practical" %}selected{% endif %}>
+                                Theory + Practical
+                            </option>
+
+                            <option value="Practical"
+                                {% if edit_course and edit_course.course_type=="Practical" %}selected{% endif %}>
+                                Practical
+                            </option>
+
+                            <option value="Project"
+                                {% if edit_course and edit_course.course_type=="Project" %}selected{% endif %}>
+                                Project
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= Department ================= -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Department <span class="required">*</span>
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="department_id"
+                            name="department_id"
+                            required>
+
+                            <option value="">Select Department</option>
+
+                            {% for dept in departments %}
+
+                            <option
+                                value="{{ dept.id }}"
+                                {% if edit_course and edit_course.department_id==dept.id %}selected{% endif %}>
+
+                                {{ dept.department_code }} - {{ dept.department_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= Program ================= -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Program <span class="required">*</span>
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="program_id"
+                            name="program_id"
+                            required>
+
+                            <option value="">Select Program</option>
+
+                            {% for program in programs %}
+
+                            <option
+                                value="{{ program.id }}"
+                                data-department="{{ program.department_id }}"
+                                {% if edit_course and edit_course.program_id==program.id %}selected{% endif %}>
+
+                                {{ program.program_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= Course Coordinator ================= -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+
+                            Course Coordinator
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="faculty_id"
+                            name="faculty_id">
+
+                            <option value="">Select Faculty</option>
+
+                            {% for faculty in faculties %}
+
+                            <option
+                                value="{{ faculty.id }}"
+                                data-department="{{ faculty.department_id }}"
+                                {% if edit_course and edit_course.faculty_id==faculty.id %}selected{% endif %}>
+
+                                {{ faculty.faculty_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+                                        <!-- ================= Semester ================= -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Semester <span class="required">*</span>
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="semester"
+                            required>
+
+                            <option value="">Select Semester</option>
+
+                            {% for i in range(1,9) %}
+
+                            <option
+                                value="{{ i }}"
+                                {% if edit_course and edit_course.semester==i %}selected{% endif %}>
+
+                                Semester {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= Regulation ================= -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Regulation <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="regulation"
+                            placeholder="2023"
+                            required
+                            value="{{ edit_course.regulation if edit_course else '' }}">
+
+                    </div>
+
+
+                    <!-- ================= Status ================= -->
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="is_active">
+
+                            <option value="1"
+                                {% if not edit_course or edit_course.is_active==1 %}selected{% endif %}>
+                                Active
+                            </option>
+
+                            <option value="0"
+                                {% if edit_course and edit_course.is_active==0 %}selected{% endif %}>
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    <i class="bi bi-save"></i>
+
+                    {% if edit_course %}
+                        Update Course
+                    {% else %}
+                        Save Course
+                    {% endif %}
+
+                </button>
+
+                <a href="/course"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-x-circle"></i>
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+        <!-- ================= Course List ================= -->
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-table"></i>
+
+                Course List
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover table-striped align-middle">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th width="5%">#</th>
+
+                            <th>Course Code</th>
+
+                            <th>Course Name</th>
+
+                            <th>Department</th>
+
+                            <th>Program</th>
+
+                            <th>Faculty</th>
+
+                            <th>Semester</th>
+
+                            <th>Credits</th>
+
+                            <th>Type</th>
+
+                            <th>Status</th>
+
+                            <th width="15%">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if courses %}
+
+                        {% for course in courses %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ course.course_code }}</td>
+
+                            <td>{{ course.course_name }}</td>
+
+                            <td>{{ course.department_name }}</td>
+
+                            <td>{{ course.program_name }}</td>
+
+                            <td>{{ course.faculty_name or "-" }}</td>
+
+                            <td>{{ course.semester }}</td>
+
+                            <td>{{ course.credits }}</td>
+
+                            <td>{{ course.course_type }}</td>
+
+                            <td>
+
+                                {% if course.is_active %}
+
+                                    <span class="badge bg-success">
+
+                                        Active
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Inactive
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="/course/edit/{{ course.id }}"
+                                   class="btn btn-warning btn-sm">
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                    Edit
+
+                                </a>
+
+                                <a href="/course/delete/{{ course.id }}"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Delete this course?');">
+
+                                    <i class="bi bi-trash"></i>
+
+                                    Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="11"
+                                class="text-center text-muted">
+
+                                No courses available.
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const department = document.getElementById("department_id");
+
+    const program = document.getElementById("program_id");
+
+    const faculty = document.getElementById("faculty_id");
+
+
+    function filterPrograms() {
+
+        const deptId = department.value;
+
+        for (let option of program.options) {
+
+            if (option.value === "") {
+
+                option.hidden = false;
+
+                continue;
+
+            }
+
+            option.hidden = option.dataset.department !== deptId;
+
+        }
+
+        if (program.selectedOptions.length &&
+            program.selectedOptions[0].hidden) {
+
+            program.value = "";
+
+        }
+
+    }
+
+
+    function filterFaculties() {
+
+        const deptId = department.value;
+
+        for (let option of faculty.options) {
+
+            if (option.value === "") {
+
+                option.hidden = false;
+
+                continue;
+
+            }
+
+            option.hidden = option.dataset.department !== deptId;
+
+        }
+
+        if (faculty.selectedOptions.length &&
+            faculty.selectedOptions[0].hidden) {
+
+            faculty.value = "";
+
+        }
+
+    }
+
+
+    department.addEventListener("change", function () {
+
+        filterPrograms();
+
+        filterFaculties();
+
+    });
+
+
+    // Load correctly during Edit
+
+    filterPrograms();
+
+    filterFaculties();
+
+});
+
+</script>
+</div>
+
+{% endblock %}

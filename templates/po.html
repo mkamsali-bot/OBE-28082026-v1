@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                Program Outcomes (PO)
+            </h4>
+
+            <a href="/masters" class="btn btn-light btn-sm">
+                ← Masters
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if po %}
+
+            <form method="post" action="/po/update/{{ po.id }}">
+
+            {% else %}
+
+            <form method="post" action="/po/save">
+
+            {% endif %}
+
+                <div class="row">
+
+                    <div class="col-md-2 mb-3">
+
+                        <label class="form-label">
+                            PO Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="po_code"
+                            class="form-control"
+                            placeholder="PO1"
+                            required
+                            value="{{ po.po_code if po else '' }}">
+
+                    </div>
+
+                    <div class="col-md-10 mb-3">
+
+                        <label class="form-label">
+                            Program Outcome Description
+                        </label>
+
+                        <textarea
+                            name="po_description"
+                            class="form-control"
+                            rows="4"
+                            required>{{ po.po_description if po else '' }}</textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        <div class="form-check mt-4">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="is_active"
+                                value="1"
+                                {% if not po or po.is_active %}checked{% endif %}>
+
+                            <label class="form-check-label">
+                                Active
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                {% if po %}
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    Update
+
+                </button>
+
+                {% else %}
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Save
+
+                </button>
+
+                {% endif %}
+
+                <a
+                    href="/po"
+                    class="btn btn-secondary">
+
+                    Clear
+
+                </a>
+
+                <a
+                    href="/masters"
+                    class="btn btn-dark">
+
+                    ← Masters
+
+                </a>
+
+                <a
+                    href="/po/load-default/1"
+                    class="btn btn-info float-end">
+
+                    Load Default AICTE/NBA POs
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                Program Outcomes List
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover table-striped">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th width="120">PO</th>
+
+                        <th>Description</th>
+
+                        <th width="100">Status</th>
+
+                        <th width="170">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for row in pos %}
+                                    <tr>
+
+                        <td>
+                            {{ row.po_code }}
+                        </td>
+
+                        <td>
+                            {{ row.po_description }}
+                        </td>
+
+                        <td>
+
+                            {% if row.is_active %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="/po/edit/{{ row.id }}"
+                                class="btn btn-warning btn-sm">
+
+                                Edit
+
+                            </a>
+
+                            <a
+                                href="/po/delete/{{ row.id }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this Program Outcome?')">
+
+                                Delete
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

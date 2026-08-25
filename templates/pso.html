@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                Program Specific Outcomes (PSO)
+            </h4>
+
+            <a href="/masters" class="btn btn-light btn-sm">
+                ← Masters
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if pso %}
+
+            <form method="post" action="/pso/update/{{ pso.id }}">
+
+            {% else %}
+
+            <form method="post" action="/pso/save">
+
+            {% endif %}
+
+                <div class="row">
+
+                    <div class="col-md-2 mb-3">
+
+                        <label class="form-label">
+                            PSO Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="pso_code"
+                            class="form-control"
+                            placeholder="PSO1"
+                            required
+                            value="{{ pso.pso_code if pso else '' }}">
+
+                    </div>
+
+                    <div class="col-md-10 mb-3">
+
+                        <label class="form-label">
+                            Program Specific Outcome Description
+                        </label>
+
+                        <textarea
+                            name="pso_description"
+                            class="form-control"
+                            rows="4"
+                            required>{{ pso.pso_description if pso else '' }}</textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        <div class="form-check mt-4">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="is_active"
+                                value="1"
+                                {% if not pso or pso.is_active %}checked{% endif %}>
+
+                            <label class="form-check-label">
+                                Active
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                {% if pso %}
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    Update
+
+                </button>
+
+                {% else %}
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Save
+
+                </button>
+
+                {% endif %}
+
+                <a
+                    href="/pso"
+                    class="btn btn-secondary">
+
+                    Clear
+
+                </a>
+
+                <a
+                    href="/masters"
+                    class="btn btn-dark">
+
+                    ← Masters
+
+                </a>
+
+                <a
+                    href="/pso/load-default/1"
+                    class="btn btn-info float-end">
+
+                    Load Default PSOs
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+
+                Program Specific Outcomes List
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover table-striped">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th width="120">PSO</th>
+
+                        <th>Description</th>
+
+                        <th width="100">Status</th>
+
+                        <th width="170">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for row in psos %}
+                                    <tr>
+
+                        <td>
+                            {{ row.pso_code }}
+                        </td>
+
+                        <td>
+                            {{ row.pso_description }}
+                        </td>
+
+                        <td>
+
+                            {% if row.is_active %}
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="/pso/edit/{{ row.id }}"
+                                class="btn btn-warning btn-sm">
+
+                                Edit
+
+                            </a>
+
+                            <a
+                                href="/pso/delete/{{ row.id }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this Program Specific Outcome?')">
+
+                                Delete
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

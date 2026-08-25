@@ -1,0 +1,468 @@
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Course Attainment</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2 class="text-primary mb-0">
+        Course Outcome Attainment
+    </h2>
+
+    <div>
+
+    <button class="btn btn-primary me-2"
+            onclick="loadAttainment()">
+        🔄 Refresh
+    </button>
+
+    <a href="/masters" class="btn btn-secondary">
+        ← Back to Masters
+    </a>
+
+</div>
+</div>
+
+    <div class="row mb-3">
+
+        <div class="col-md-6">
+
+    <label class="form-label">
+        Course
+    </label>
+
+    <select
+        id="course_id"
+        class="form-select">
+
+        <option value="">
+            Select Course
+        </option>
+
+    </select>
+
+</div>
+
+<div class="col-md-2 d-flex align-items-end">
+
+    <button
+        class="btn btn-primary w-100"
+        onclick="loadAttainment()">
+
+        Load Attainment
+
+    </button>
+
+</div>
+
+    </div>
+
+    <div class="card mb-3">
+
+        <div class="card-header">
+
+            <b>Course Summary</b>
+            <div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card text-bg-primary">
+            <div class="card-body text-center">
+                <h6>Average CO</h6>
+                <h3 id="avgCO">0%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-success">
+            <div class="card-body text-center">
+                <h6>Average Final CO</h6>
+                <h3 id="avgFinalCO">0%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning">
+            <div class="card-body text-center">
+                <h6>Average PO</h6>
+                <h3 id="avgPO">0%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-info">
+            <div class="card-body text-center">
+                <h6>Average PSO</h6>
+                <h3 id="avgPSO">0%</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div id="courseSummary">
+
+                Select a course.
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Direct CO -->
+
+<div class="card mb-3">
+
+    <div class="card-header bg-primary text-white">
+
+        Direct CO Attainment
+
+    </div>
+
+    <div class="card-body">
+
+        <div id="coTable"></div>
+
+    </div>
+
+</div>
+<div class="card mt-3">
+
+    <div class="card-header bg-info text-white">
+        Indirect CO Attainment
+    </div>
+
+    <div class="card-body">
+
+        <div id="indirectTable"></div>
+
+    </div>
+
+</div>
+
+
+<!-- Final CO -->
+
+<div class="card mb-3">
+
+    <div class="card-header bg-success text-white">
+
+        Final CO Attainment
+
+    </div>
+
+    <div class="card-body">
+        <div class="alert alert-info">
+
+            <strong>Formula Used</strong><br>
+
+            Final CO = (Direct CO × 80%) + (Indirect CO × 20%)
+
+        </div>
+
+       <div id="finalCoTable"></div>
+
+    </div>
+
+</div>
+
+
+<!-- PO -->
+
+<div class="card mb-3">
+
+    <div class="card-header bg-warning">
+
+        PO Attainment
+
+    </div>
+
+    <div class="card-body">
+
+        <div id="poTable"></div>
+
+    </div>
+
+</div>
+
+
+<!-- PSO -->
+
+<div class="card mb-3">
+
+    <div class="card-header bg-info text-white">
+
+        PSO Attainment
+
+    </div>
+
+    <div class="card-body">
+
+        <div id="psoTable"></div>
+
+    </div>
+
+</div>
+
+    
+
+<script>
+
+window.onload = function () {
+
+    loadCourses();
+
+};
+
+async function loadCourses() {
+
+    let response = await fetch("/courses");
+
+    let courses = await response.json();
+
+    let ddl = document.getElementById("course_id");
+
+    ddl.innerHTML =
+        '<option value="">Select Course</option>';
+
+    courses.forEach(course => {
+
+        ddl.innerHTML +=
+        `
+        <option value="${course.id}">
+            ${course.course_code} - ${course.course_name}
+        </option>
+        `;
+
+    });
+
+}
+async function loadAttainment(){
+
+    let courseId = document.getElementById("course_id").value;
+
+    if(courseId==""){
+        alert("Please select a course.");
+        return;
+    }
+
+    let response = await fetch(`/course-attainment/${courseId}`);
+
+    let data = await response.json();
+    document.getElementById("courseSummary").innerHTML = `
+<b>Course ID :</b> ${courseId}<br>
+<b>Total COs :</b> ${Object.keys(data.co).length}<br>
+<b>Total POs :</b> ${Object.keys(data.po).length}<br>
+<b>Total PSOs :</b> ${Object.keys(data.pso).length}
+`;
+/* ===========================
+   Summary Cards
+=========================== */
+
+let avgCO = 0;
+
+for (let id in data.co) {
+    avgCO += data.co[id].percentage;
+}
+
+avgCO = avgCO / Object.keys(data.co).length;
+
+document.getElementById("avgCO").innerHTML =
+    avgCO.toFixed(2) + "%";
+    let avgFinalCO = 0;
+
+for (let id in data.final_co) {
+    avgFinalCO += data.final_co[id].final;
+}
+
+avgFinalCO = avgFinalCO / Object.keys(data.final_co).length;
+
+document.getElementById("avgFinalCO").innerHTML =
+    avgFinalCO.toFixed(2) + "%";
+
+    let avgPO = 0;
+
+for (let po in data.po) {
+    avgPO += data.po[po];
+}
+
+avgPO = avgPO / Object.keys(data.po).length;
+
+document.getElementById("avgPO").innerHTML =
+    avgPO.toFixed(2) + "%";
+
+    let avgPSO = 0;
+
+for (let pso in data.pso) {
+    avgPSO += data.pso[pso];
+}
+
+avgPSO = avgPSO / Object.keys(data.pso).length;
+
+document.getElementById("avgPSO").innerHTML =
+    avgPSO.toFixed(2) + "%";
+/* ===========================
+   Direct CO Table
+=========================== */
+
+
+let html = `
+<table class="table table-bordered table-striped">
+
+<tr>
+    <th>CO</th>
+    <th>Achieved</th>
+    <th>Total</th>
+    <th>Percentage</th>
+</tr>
+`;
+
+for (let id in data.co){
+
+    let row = data.co[id];
+
+    html += `
+    <tr>
+
+        <td>${row.co_code}</td>
+        <td>${row.achieved}</td>
+        <td>${row.total}</td>
+        <td>${row.percentage.toFixed(2)}%</td>
+
+    </tr>
+    `;
+}
+
+html += "</table>";
+
+document.getElementById("coTable").innerHTML = html;
+
+/* ===========================
+   Indirect CO Table
+=========================== */
+
+html = `
+<table class="table table-bordered table-striped">
+
+<tr>
+    <th>CO</th>
+    <th>Indirect Attainment (%)</th>
+</tr>
+`;
+
+for (let id in data.co) {
+
+    let row = data.co[id];
+
+    let indirect = data.indirect[id] ?? 0;
+
+    html += `
+    <tr>
+        <td>${row.co_code}</td>
+        <td>${Number(indirect).toFixed(2)}%</td>
+    </tr>
+    `;
+}
+
+html += "</table>";
+
+document.getElementById("indirectTable").innerHTML = html;
+
+/* ===========================
+   Final CO Table
+=========================== */
+
+html = `
+<table class="table table-bordered table-striped">
+
+<tr>
+    <th>CO</th>
+    <th>Direct</th>
+    <th>Indirect</th>
+    <th>Final</th>
+</tr>
+`;
+for (let id in data.final_co) {
+
+    let row = data.final_co[id];
+
+    html += `
+    <tr>
+        <td>${data.co[id].co_code}</td>
+        <td>${row.direct.toFixed(2)}%</td>
+        <td>${row.indirect.toFixed(2)}%</td>
+        <td>${row.final.toFixed(2)}%</td>
+    </tr>
+    `;
+}
+html += "</table>";
+document.getElementById("finalCoTable").innerHTML = html;
+
+/* ===========================
+   PO Table
+=========================== */
+
+html = `
+<table class="table table-bordered table-striped">
+
+<tr>
+    <th>Program Outcome</th>
+    <th>Attainment (%)</th>
+</tr>
+`;
+for (let po in data.po) {
+
+    html += `
+    <tr>
+        <td>${po}</td>
+        <td>${data.po[po].toFixed(2)}%</td>
+    </tr>
+    `;
+}
+html += "</table>";
+
+document.getElementById("poTable").innerHTML = html;
+/* ===========================
+   PSO Table
+=========================== */
+
+html = `
+<table class="table table-bordered table-striped">
+
+<tr>
+    <th>Program Specific Outcome</th>
+    <th>Attainment (%)</th>
+</tr>
+`;
+for (let pso in data.pso) {
+
+    html += `
+    <tr>
+        <td>${pso}</td>
+        <td>${data.pso[pso].toFixed(2)}%</td>
+    </tr>
+    `;
+}
+html += "</table>";
+
+document.getElementById("psoTable").innerHTML = html;
+
+}
+</script>
+</body>
+</html>

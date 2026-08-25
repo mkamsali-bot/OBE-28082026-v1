@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold text-primary">
+
+                Marks Entry
+
+            </h2>
+
+            <p class="text-muted">
+
+                Enter CO-wise Student Assessment Marks
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <a href="/masters" class="btn btn-secondary">
+
+                ← Back to Masters
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Course Selection -->
+
+    <div class="card mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            Select Course
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="get" action="/marks/load">
+
+                <div class="row">
+
+                    <div class="col-md-8">
+
+                        <select
+
+                            class="form-select"
+
+                            name="course_id"
+
+                            onchange="this.form.submit()">
+
+                            <option value="">
+
+                                Select Course
+
+                            </option>
+
+                            {% for course in courses %}
+
+                            <option
+
+                                value="{{ course.id }}"
+
+                                {% if selected_course and selected_course.id==course.id %}
+                                selected
+                                {% endif %}>
+
+                                {{ course.course_code }}
+
+                                -
+
+                                {{ course.course_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        {% if course_type %}
+
+                        <span class="badge bg-dark">
+
+                            {{ course_type }}
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+    {% if selected_course %}
+
+<div class="card mb-4">
+
+    <div class="card-header bg-success text-white">
+
+        Assessment Component
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="post" action="/marks/save" id="marksForm">
+
+            <input
+                type="hidden"
+                name="course_id"
+                value="{{ selected_course.id }}">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+
+                        Assessment Component
+
+                    </label>
+
+                    <select
+
+                        class="form-select"
+
+                        name="assessment_component"
+
+                        required>
+
+                        <option value="">
+
+                            Select Assessment
+
+                        </option>
+
+                        {% for component in assessment_components %}
+
+                        <option
+
+                            value="{{ component }}"
+
+                            {% if assessment_component==component %}
+                            selected
+                            {% endif %}>
+
+                            {{ component }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+
+                        Selected Course
+
+                    </label>
+
+                    <input
+
+                        type="text"
+
+                        class="form-control"
+
+                        value="{{ selected_course.course_code }} - {{ selected_course.course_name }}"
+
+                        readonly>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Marks Entry -->
+
+    <div class="card">
+
+        <div class="card-header bg-primary text-white">
+
+            Student Marks Entry
+
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-striped">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th style="width:8%">
+
+                            USN
+
+                        </th>
+
+                        <th style="width:20%">
+
+                            Student Name
+
+                        </th>
+
+                        {% for co in cos %}
+
+                        <th class="text-center">
+
+                            {{ co.co_code }}
+
+                        </th>
+
+                        {% endfor %}
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    {% if students %}
+
+    {% for student in students %}
+
+    <tr>
+
+        <td>
+
+            {{ student.usn }}
+
+        </td>
+
+        <td>
+
+            {{ student.student_name }}
+
+        </td>
+
+        {% for co in cos %}
+
+        <td>
+
+            <!-- Hidden Student ID -->
+            <input
+                type="hidden"
+                name="student_id"
+                value="{{ student.id }}">
+
+            <!-- Hidden CO ID -->
+            <input
+                type="hidden"
+                name="co_id"
+                value="{{ co.id }}">
+
+            <!-- Marks -->
+            <input
+
+                type="number"
+
+                class="form-control text-center"
+
+                name="marks"
+
+                min="0"
+
+                max="100"
+
+                step="0.01"
+
+                placeholder="0"
+
+                value="{% if saved_marks %}
+                    {% for m in saved_marks %}
+                        {% if m.student_id == student.id and m.co_id == co.id %}
+                            {{ m.marks }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}"
+
+                required>
+
+        </td>
+
+        {% endfor %}
+
+    </tr>
+
+    {% endfor %}
+
+{% else %}
+
+    <tr>
+
+        <td colspan="{{ cos|length + 2 }}" class="text-center text-muted">
+
+            No students are registered for this course.
+
+        </td>
+
+    </tr>
+
+{% endif %}
+
+                </tbody>
+
+            </table>
+                        <div class="mt-4 d-flex gap-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    💾 Save Marks
+
+                </button>
+
+                <button
+                    type="reset"
+                    class="btn btn-warning">
+
+                    🔄 Reset
+
+                </button>
+
+                {% if assessment_component %}
+
+                <button
+
+                    type="submit"
+
+                    formaction="/marks/delete"
+
+                    class="btn btn-danger"
+
+                    onclick="return confirm('Delete all marks for this assessment component?');">
+
+                    🗑 Delete Marks
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% if saved_marks %}
+
+<div class="card mt-4">
+
+    <div class="card-header bg-info text-white">
+
+        Assessment Summary
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <div class="alert alert-primary mb-2">
+
+                    <strong>Course</strong><br>
+
+                    {{ selected_course.course_code }}
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="alert alert-success mb-2">
+
+                    <strong>Assessment</strong><br>
+
+                    {{ assessment_component }}
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="alert alert-secondary mb-2">
+
+                    <strong>Total Entries</strong><br>
+
+                    {{ saved_marks|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const marksInputs = document.querySelectorAll("input[name='marks']");
+
+    // --------------------------------------------------
+    // Allow only values between 0 and 100
+    // --------------------------------------------------
+
+    marksInputs.forEach(input => {
+
+        input.addEventListener("input", function () {
+
+            let value = parseFloat(this.value);
+
+            if (isNaN(value))
+                return;
+
+            if (value < 0)
+                this.value = 0;
+
+            if (value > 100)
+                this.value = 100;
+
+        });
+
+    });
+
+
+    // --------------------------------------------------
+    // Move to next box on Enter
+    // --------------------------------------------------
+
+    marksInputs.forEach((input, index) => {
+
+        input.addEventListener("keydown", function (e) {
+
+            if (e.key === "Enter") {
+
+                e.preventDefault();
+
+                if (index + 1 < marksInputs.length) {
+
+                    marksInputs[index + 1].focus();
+                    marksInputs[index + 1].select();
+
+                }
+
+            }
+
+        });
+
+    });
+
+
+    // --------------------------------------------------
+    // Highlight current input
+    // --------------------------------------------------
+
+    marksInputs.forEach(input => {
+
+        input.addEventListener("focus", function () {
+
+            this.classList.add("border-primary");
+
+        });
+
+        input.addEventListener("blur", function () {
+
+            this.classList.remove("border-primary");
+
+        });
+
+    });
+
+
+    // --------------------------------------------------
+    // Validate before saving
+    // --------------------------------------------------
+
+    const form = document.getElementById("marksForm");
+
+    if (form) {
+
+        form.addEventListener("submit", function (e) {
+
+            let valid = true;
+
+            marksInputs.forEach(input => {
+
+                if (input.value === "") {
+
+                    valid = false;
+
+                }
+
+                let value = parseFloat(input.value);
+
+                if (isNaN(value) || value < 0 || value > 100) {
+
+                    valid = false;
+
+                }
+
+            });
+
+            if (!valid) {
+
+                alert("Please enter valid marks (0 to 100) for all students.");
+
+                e.preventDefault();
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+{% endif %}
+
+</div>
+
+{% endblock %}

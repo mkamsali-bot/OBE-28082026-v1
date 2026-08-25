@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-1">
+                Marks Upload
+            </h2>
+            <p class="text-muted mb-0">
+                Upload student assessment marks through Excel
+            </p>
+        </div>
+        <div>
+            <a href="/masters" class="btn btn-outline-secondary">
+                ← Back to Masters
+            </a>
+        </div>
+    </div>
+
+    <!-- COURSE SELECTION -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <strong>1. Select Course</strong>
+        </div>
+        <div class="card-body">
+            <form method="get" action="/marks/course">
+                <div class="row align-items-end">
+                    <div class="col-md-8">
+                        <label for="course_id" class="form-label fw-semibold">
+                            Course
+                        </label>
+                        <select id="course_id" name="course_id" class="form-select" required onchange="this.form.submit()">
+                            <option value="">-- Select Course --</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}" {% if selected_course and selected_course.id == course.id %}selected{% endif %}>
+                                {{ course.course_code }} - {{ course.course_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        {% if course_type %}
+                        <div>
+                            <label class="form-label fw-semibold">
+                                Course Type
+                            </label>
+                            <div>
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                                    {{ course_type }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ASSESSMENT PATTERN -->
+    {% if selected_course %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <strong>2. Assessment Pattern</strong>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-2 fw-semibold">
+                        Assessment components for this course:
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for component in components %}
+                        <span class="badge bg-primary fs-6 px-3 py-2">
+                            {{ component }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="/marks/template?course_id={{ selected_course.id }}" class="btn btn-success">
+                        📥 Download Excel Template
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXCEL FORMAT INFORMATION -->
+    <div class="alert alert-info shadow-sm mb-4">
+        <strong>Excel Format:</strong>
+        The downloaded Excel file will contain:
+        <strong>Reg No. | Student Name</strong>
+        {% for component in components %}
+        <strong>| {{ component }}</strong>
+        {% endfor %}
+        <br>
+        <small class="text-muted">
+            Enter marks only in the appropriate assessment columns. Do not change column names.
+        </small>
+    </div>
+
+    <!-- EXCEL UPLOAD -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning">
+            <strong>3. Upload Completed Excel</strong>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/marks/validate" enctype="multipart/form-data" id="uploadForm">
+                <input type="hidden" name="course_id" value="{{ selected_course.id }}">
+                <div class="row align-items-end">
+                    <div class="col-md-8">
+                        <label for="marks_file" class="form-label fw-semibold">
+                            Select Completed Excel File
+                        </label>
+                        <input type="file" id="marks_file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                        <div class="form-text">
+                            Upload the Excel template downloaded for this course after entering marks.
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <button type="submit" class="btn btn-primary w-100" id="validateButton">
+                            🔍 Validate Excel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- MESSAGE -->
+    {% if message %}
+    <div class="alert alert-info shadow-sm mb-4">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <!-- VALIDATION RESULT -->
+    {% if validation %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header {% if validation.valid %}bg-success{% else %}bg-danger{% endif %} text-white">
+            <strong>4. Excel Validation Result</strong>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="alert alert-secondary mb-0">
+                        <strong>Total Rows</strong>
+                        <div class="fs-4">{{ validation.total_rows }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="alert alert-success mb-0">
+                        <strong>Valid Rows</strong>
+                        <div class="fs-4">{{ validation.valid_count }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="alert alert-danger mb-0">
+                        <strong>Error Rows</strong>
+                        <div class="fs-4">{{ validation.error_count }}</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if validation.valid %}
+            <div class="alert alert-success">
+                <strong>✓ Excel validation successful.</strong><br>
+                All rows and assessment marks are valid.
+            </div>
+
+            <form method="post" action="/marks/import" enctype="multipart/form-data">
+                <input type="hidden" name="course_id" value="{{ selected_course.id }}">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Confirm Excel File</label>
+                    <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                    <div class="form-text">Please select the same validated Excel file to confirm import.</div>
+                </div>
+                <button type="submit" class="btn btn-success">
+                    ✓ Confirm Import
+                </button>
+            </form>
+
+            {% else %}
+            <div class="alert alert-danger">
+                <strong>✗ Excel contains errors.</strong><br>
+                Correct the Excel file and upload it again.
+            </div>
+
+            {% if validation.errors %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-danger">
+                        <tr>
+                            <th style="width:10%">Excel Row</th>
+                            <th style="width:20%">Reg No.</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for error in validation.errors %}
+                        <tr>
+                            <td>{{ error.row }}</td>
+                            <td>{{ error.reg_no }}</td>
+                            <td>
+                                {% for item in error.errors %}
+                                <div>• {{ item }}</div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- IMPORT SUCCESS -->
+    {% if imported %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <strong>5. Import Completed</strong>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-success mb-3">
+                <h5 class="alert-heading">✓ Marks Imported Successfully</h5>
+                <p class="mb-1">{{ message }}</p>
+                {% if total_imported is defined %}
+                <p class="mb-0">
+                    <strong>Total marks entries:</strong> {{ total_imported }}
+                </p>
+                {% endif %}
+            </div>
+
+            {% if selected_course %}
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Course:</strong> {{ selected_course.course_code }} - {{ selected_course.course_name }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Course Type:</strong> {{ course_type }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if components %}
+            <div class="mt-3">
+                <strong>Imported Assessment Components:</strong>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    {% for component in components %}
+                    <span class="badge bg-success px-3 py-2">{{ component }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- INSTRUCTIONS -->
+    {% if selected_course and not imported %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <strong>Excel Upload Instructions</strong>
+        </div>
+        <div class="card-body">
+            <ol class="mb-0">
+                <li class="mb-2">Select the required course.</li>
+                <li class="mb-2">Download the system-generated Excel template.</li>
+                <li class="mb-2">Enter student <strong>Reg No.</strong>, <strong>Student Name</strong>, and marks.</li>
+                <li class="mb-2">Do not change the Excel column names.</li>
+                <li class="mb-2">Upload the completed Excel file.</li>
+                <li class="mb-2">Correct all validation errors, if any.</li>
+                <li>Confirm the import only after successful validation.</li>
+            </ol>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- PAGE JAVASCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const uploadForm = document.getElementById("uploadForm");
+    const validateButton = document.getElementById("validateButton");
+    const fileInput = document.getElementById("marks_file");
+
+    if (uploadForm && validateButton) {
+        uploadForm.addEventListener("submit", function () {
+            if (fileInput && !fileInput.value) {
+                return;
+            }
+            validateButton.disabled = true;
+            validateButton.innerHTML = "⏳ Validating...";
+        });
+    }
+});
+</script>
+
+{% endblock %}

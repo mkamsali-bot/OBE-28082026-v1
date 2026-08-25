@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row mb-4">
+
+        <div class="col-12">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h3 class="mb-0">
+
+                        <i class="bi bi-grid-fill"></i>
+
+                        Masters Dashboard
+
+                    </h3>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p class="mb-0">
+
+                        Manage all master data required for Outcome Based Education (OBE) Analytics Pro.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+            <!-- ================= Department ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-primary h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-building display-4 text-primary"></i>
+
+                <h4 class="mt-3">
+
+                    Department
+
+                </h4>
+
+                <p>
+
+                    Manage Departments
+
+                </p>
+
+                <a href="/department"
+                   class="btn btn-primary">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Program ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-success h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-mortarboard-fill display-4 text-success"></i>
+
+                <h4 class="mt-3">
+
+                    Program
+
+                </h4>
+
+                <p>
+
+                    Manage Programs
+
+                </p>
+
+                <a href="/program"
+                   class="btn btn-success">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Faculty ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-warning h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-person-workspace display-4 text-warning"></i>
+
+                <h4 class="mt-3">
+
+                    Faculty
+
+                </h4>
+
+                <p>
+
+                    Manage Faculty
+
+                </p>
+
+                <a href="/faculty"
+                   class="btn btn-warning">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Course ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-info h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-journal-bookmark-fill display-4 text-info"></i>
+
+                <h4 class="mt-3">
+
+                    Course
+
+                </h4>
+
+                <p>
+
+                    Manage Courses
+
+                </p>
+
+                <a href="/course"
+                   class="btn btn-info text-white">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- ================= Course Outcomes ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-secondary h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-bullseye display-4 text-secondary"></i>
+
+                <h4 class="mt-3">
+
+                    Course Outcomes
+
+                </h4>
+
+                <p>
+
+                    Manage COs
+
+                </p>
+
+                <a href="/co"
+                   class="btn btn-secondary">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CO–PO Mapping ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-danger h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-diagram-3-fill display-4 text-danger"></i>
+
+                <h4 class="mt-3">
+
+                    CO–PO Mapping
+
+                </h4>
+
+                <p>
+
+                    Map CO with PO & PSO
+
+                </p>
+
+                <a href="/co-mapping"
+                   class="btn btn-danger">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CO Weightage ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-dark h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-percent display-4 text-dark"></i>
+
+                <h4 class="mt-3">
+
+                    CO Weightage
+
+                </h4>
+
+                <p>
+
+                    Assessment Weightage
+
+                </p>
+
+                <a href="/co-weightage"
+                   class="btn btn-dark">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Excel Upload ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-success h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-excel-fill display-4 text-success"></i>
+
+                <h4 class="mt-3">
+
+                    Excel Upload
+
+                </h4>
+
+                <p>
+
+                    Upload Student Marks
+
+                </p>
+
+                <a href="/marks"
+                   class="btn btn-success">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+        <!-- ================= Reports ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-primary h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-file-earmark-pdf-fill display-4 text-primary"></i>
+
+                <h4 class="mt-3">
+
+                    Reports
+
+                </h4>
+
+                <p>
+
+                    Generate Excel & PDF Reports
+
+                </p>
+
+                <a href="/reports"
+                   class="btn btn-primary">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= Gaussian Curve ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-warning h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-graph-up display-4 text-warning"></i>
+
+                <h4 class="mt-3">
+
+                    Gaussian Curve
+
+                </h4>
+
+                <p>
+
+                    Statistical Analysis
+
+                </p>
+
+                <a href="/gaussian"
+                   class="btn btn-warning">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CO / PO Attainment ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-success h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-bar-chart-line-fill display-4 text-success"></i>
+
+                <h4 class="mt-3">
+
+                    Attainment
+
+                </h4>
+
+                <p>
+
+                    CO / PO / PSO Attainment
+
+                </p>
+
+                <a href="/attainment"
+                   class="btn btn-success">
+
+                    Open
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- ================= NBA Reports ================= -->
+
+<div class="col-lg-3 col-md-6">
+
+    <div class="card border-dark h-100 shadow-sm">
+
+        <div class="card-body text-center">
+
+            <i class="bi bi-file-earmark-spreadsheet-fill display-4 text-dark"></i>
+
+            <h4 class="mt-3">
+
+                NBA Reports
+
+            </h4>
+
+            <p>
+
+                Generate NBA Excel Reports
+
+            </p>
+
+            <a href="/nba-reports"
+               class="btn btn-dark">
+
+                Open
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+    <!-- ================= Future Modules ================= -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-secondary h-100 shadow-sm">
+
+            <div class="card-body text-center">
+
+                <i class="bi bi-tools display-4 text-secondary"></i>
+
+                <h4 class="mt-3">
+
+                    More Modules
+
+                </h4>
+
+                <p>
+
+                    Additional OBE features
+
+                </p>
+
+                <button
+                    class="btn btn-secondary"
+                    disabled>
+
+                    Coming Soon
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+    <h5 class="text-primary">
+
+        OBE Analytics Pro
+
+    </h5>
+
+    <p class="text-muted">
+
+        Outcome Based Education Analytics and NBA Accreditation Support System
+
+    </p>
+
+</div>
+
+</div>
+
+{% endblock %}

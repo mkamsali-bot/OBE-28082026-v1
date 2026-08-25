@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+            <h4 class="mb-0">
+                CO–PO / PSO Mapping
+            </h4>
+
+            <a href="/masters" class="btn btn-light btn-sm">
+                ← Masters
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if mapping %}
+
+            <form method="post" action="/co-po/update/{{ mapping.id }}">
+
+            {% else %}
+
+            <form method="post" action="/co-po/save">
+
+            {% endif %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Course
+                        </label>
+
+                        <select
+                            name="course_id"
+                            class="form-select"
+                            required>
+
+                            {% for course in courses %}
+
+                            <option
+                                value="{{ course.id }}"
+                                {% if mapping and mapping.course_id==course.id %}selected{% endif %}>
+
+                                {{ course.course_code }} - {{ course.course_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Course Outcome
+                        </label>
+
+                        <select
+                            name="co_id"
+                            class="form-select"
+                            required>
+
+                            {% for co in cos %}
+
+                            <option
+                                value="{{ co.id }}"
+                                {% if mapping and mapping.co_id==co.id %}selected{% endif %}>
+
+                                {{ co.co_code }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5 class="text-primary">
+                    Program Outcome Mapping
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO1</label>
+
+                        <select name="po1" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po1==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO2</label>
+
+                        <select name="po2" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po2==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO3</label>
+
+                        <select name="po3" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po3==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO4</label>
+
+                        <select name="po4" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po4==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO5</label>
+
+                        <select name="po5" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po5==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO6</label>
+
+                        <select name="po6" class="form-select">
+
+                            {% for i in range(4) %}
+
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po6==i %}selected{% endif %}>
+
+                                {{ i }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+                                <div class="row">
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO7</label>
+
+                        <select name="po7" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po7==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO8</label>
+
+                        <select name="po8" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po8==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO9</label>
+
+                        <select name="po9" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po9==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO10</label>
+
+                        <select name="po10" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po10==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO11</label>
+
+                        <select name="po11" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po11==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+
+                        <label>PO12</label>
+
+                        <select name="po12" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.po12==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5 class="text-primary">
+                    Program Specific Outcome Mapping
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+
+                        <label>PSO1</label>
+
+                        <select name="pso1" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.pso1==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label>PSO2</label>
+
+                        <select name="pso2" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.pso2==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label>PSO3</label>
+
+                        <select name="pso3" class="form-select">
+
+                            {% for i in range(4) %}
+                            <option value="{{ i }}"
+                            {% if mapping and mapping.pso3==i %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        <div class="form-check mt-3">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="is_active"
+                                value="1"
+                                {% if not mapping or mapping.is_active %}checked{% endif %}>
+
+                            <label class="form-check-label">
+                                Active
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                {% if mapping %}
+
+                <button type="submit" class="btn btn-success">
+                    Update
+                </button>
+
+                {% else %}
+
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+
+                {% endif %}
+
+                <a href="/co-po" class="btn btn-secondary">
+                    Clear
+                </a>
+
+                <a href="/masters" class="btn btn-dark">
+                    ← Masters
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            <h5 class="mb-0">
+                Existing CO–PO / PSO Mapping
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover table-striped">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Course</th>
+                            <th>CO</th>
+                            <th>PO1</th>
+                            <th>PO2</th>
+                            <th>PO3</th>
+                            <th>PO4</th>
+                            <th>PO5</th>
+                            <th>PO6</th>
+                            <th>PO7</th>
+                            <th>PO8</th>
+                            <th>PO9</th>
+                            <th>PO10</th>
+                            <th>PO11</th>
+                            <th>PO12</th>
+                            <th>PSO1</th>
+                            <th>PSO2</th>
+                            <th>PSO3</th>
+                            <th>Status</th>
+                            <th width="170">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for row in mappings %}
+                                            <tr>
+
+                            <td>
+                                {{ row.course_code }} - {{ row.course_name }}
+                            </td>
+
+                            <td>
+                                {{ row.co_code }}
+                            </td>
+
+                            <td>{{ row.po1 }}</td>
+                            <td>{{ row.po2 }}</td>
+                            <td>{{ row.po3 }}</td>
+                            <td>{{ row.po4 }}</td>
+                            <td>{{ row.po5 }}</td>
+                            <td>{{ row.po6 }}</td>
+                            <td>{{ row.po7 }}</td>
+                            <td>{{ row.po8 }}</td>
+                            <td>{{ row.po9 }}</td>
+                            <td>{{ row.po10 }}</td>
+                            <td>{{ row.po11 }}</td>
+                            <td>{{ row.po12 }}</td>
+
+                            <td>{{ row.pso1 }}</td>
+                            <td>{{ row.pso2 }}</td>
+                            <td>{{ row.pso3 }}</td>
+
+                            <td>
+
+                                {% if row.is_active %}
+
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/co-po/edit/{{ row.id }}"
+                                    class="btn btn-warning btn-sm">
+
+                                    Edit
+
+                                </a>
+
+                                <a
+                                    href="/co-po/delete/{{ row.id }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this mapping?')">
+
+                                    Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

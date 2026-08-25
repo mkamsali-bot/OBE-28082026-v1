@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Indirect CO Attainment</h4>
+            <a href="/masters" class="btn btn-light btn-sm">← Back to Masters</a>
+        </div>
+
+        <div class="card-body">
+            
+            <!-- Success Alert -->
+            {% if saved %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> Indirect attainment has been saved successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Course Selection Form -->
+            <form method="get" action="/indirect-attainment">
+                <div class="row mb-3 align-items-end">
+                    <div class="col-md-8">
+                        <label for="courseSelect" class="form-label">Select Course</label>
+                        <select id="courseSelect" name="course_id" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Select Course --</option>
+                            {% for course in courses %}
+                            <option value="{{ course.id }}" {% if course.id == course_id %}selected{% endif %}>
+                                {{ course.course_code }} - {{ course.course_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Load</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Course Info Banner -->
+            {% if course_id %}
+            <div class="alert alert-info">
+                <b>Selected Course ID:</b> {{ course_id }} <br>
+                <b>Total COs:</b> {{ cos|length }}
+            </div>
+            {% endif %}
+
+            <!-- CO Table Form -->
+            {% if cos %}
+            <form method="post" action="/indirect-attainment/save">
+                <input type="hidden" name="course_id" value="{{ course_id }}">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 15%;">CO</th>
+                                <th style="width: 60%;">Course Outcome</th>
+                                <th style="width: 25%;">Indirect Attainment (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for co in cos %}
+                            <tr>
+                                <td>{{ co.co_code }}</td>
+                                <td>{{ co.co_description }}</td>
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        name="co_{{ co.id }}" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.01" 
+                                        value="{{ indirect_lookup.get(co.id, '') }}">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Save Indirect Attainment
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
