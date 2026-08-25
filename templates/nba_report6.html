@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary mb-0">
+            Report 6 – Direct CO → PO Contribution
+        </h2>
+
+        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}"
+           class="btn btn-secondary">
+            ← Back to NBA Reports
+        </a>
+    </div>
+
+    <hr>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Course Code:</strong>
+                    {{ course.course_code }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Course Name:</strong>
+                    {{ course.course_name }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Course Type:</strong>
+                    {{ course.course_type }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                Direct CO → PO / PSO Contribution
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped table-sm">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>CO</th>
+                            <th>Direct CO Attainment</th>
+                            <th>Mapping Sum</th>
+
+                            {% for i in range(1, 13) %}
+                            <th>PO{{ i }}</th>
+                            {% endfor %}
+
+                            {% for i in range(1, 4) %}
+                            <th>PSO{{ i }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for row in contribution %}
+
+                        <tr>
+                            <td>
+                                <strong>{{ row.co_code }}</strong>
+                            </td>
+
+                            <td class="text-center">
+                                {{ "%.2f"|format(row.co_attainment) }}
+                            </td>
+
+                            <td class="text-center">
+                                {{ row.mapping_sum }}
+                            </td>
+
+                            {% for i in range(1, 13) %}
+                            <td class="text-center">
+                                {{ "%.2f"|format(row["po" ~ i]) }}
+                            </td>
+                            {% endfor %}
+
+                            {% for i in range(1, 4) %}
+                            <td class="text-center">
+                                {{ "%.2f"|format(row["pso" ~ i]) }}
+                            </td>
+                            {% endfor %}
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mt-4">
+
+        <a href="/nba-report6-excel?course_id={{ course_id }}"
+           class="btn btn-success">
+
+            <i class="bi bi-file-earmark-excel"></i>
+            Download Excel
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

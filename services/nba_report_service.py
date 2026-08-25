@@ -5,7 +5,6 @@ from database import get_connection
 def get_course_type(course_id):
 
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -18,11 +17,10 @@ def get_course_type(course_id):
 
     conn.close()
 
-    if row:
+    print("Course Type from DB:", row)
 
-        return row["course_type"]
+    return row["course_type"]
 
-    return None
 from database import get_connection
 
 def get_course_details(course_id):
