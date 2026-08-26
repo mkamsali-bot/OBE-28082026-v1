@@ -55,8 +55,6 @@ from services.nba_report6_service import (
     get_direct_co_po_contribution
 )
 
-router = APIRouter()
-
 
 @router.get("/nba-reports", response_class=HTMLResponse)
 def nba_reports(
@@ -363,9 +361,7 @@ def nba_report6(
 
     course = get_course_details(course_id)
 
-    contribution = get_direct_co_po_contribution(
-        course_id
-    )
+    contribution = get_direct_co_po_contribution(course_id)
 
     return templates.TemplateResponse(
         request=request,
@@ -395,12 +391,10 @@ def nba_report6_excel(course_id: int):
             'attachment; filename="Direct_CO_PO_Contribution.xlsx"'
         }
     )
-@router.get("/nba-report7", response_class=HTMLResponse)
 def nba_report7(
     request: Request,
     course_id: int
 ):
-
     course = get_course_details(course_id)
 
     contribution = get_indirect_co_po_contribution(
