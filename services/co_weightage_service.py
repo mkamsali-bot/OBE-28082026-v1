@@ -9,9 +9,7 @@ def row_to_dict(row):
 
 import os
 
-print("=" * 60)
-print("Loaded:", os.path.abspath(__file__))
-print("=" * 60)
+
 
 DB_NAME = "obe.db"
 
@@ -404,7 +402,7 @@ def validate_evaluation(weightages):
     return abs(evaluation_total - 100.0) < 0.01
 
 def validate_weightages(course_type, weightages):
-    print("Course Type =", course_type)
+    
 
     if course_type == "Theory":
         return validate_theory(weightages)

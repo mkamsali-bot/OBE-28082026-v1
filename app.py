@@ -4,9 +4,6 @@ import time
 import webbrowser
 import uvicorn
 
-print("=" * 60)
-print("APP FILE LOADED:", __file__)
-print("=" * 60)
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -38,7 +35,7 @@ from modules.nba_reports import router as nba_reports_router
 # ---------------------------------------------------------
 initialize_database()
 app = FastAPI(title="OBE Analytics Pro")
-print("Creating FastAPI application")
+
 
 # Static Files & Templates
 #app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -58,8 +55,6 @@ app.include_router(marks_upload_router)
 app.include_router(co_attainment_router)
 app.include_router(indirect_attainment_router)
 app.include_router(nba_reports_router)
-print(type(app))
-print(app)
 
 from fastapi.routing import APIRoute
 
@@ -130,13 +125,6 @@ def open_browser():
 # ---------------------------------------------------------
 # Run Application
 # ---------------------------------------------------------
-print("\n========== REGISTERED ROUTES ==========")
-
-for route in app.routes:
-    print(type(route))
-    print(route)
-
-print("=======================================\n")
 from fastapi.responses import FileResponse
 if __name__ == "__main__":
 
