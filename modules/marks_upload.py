@@ -99,7 +99,7 @@ def download_marks_template(course_id: int):
         return RedirectResponse(url="/marks", status_code=303)
 
     course_type = get_course_type(course_id)
-    print("Course Type =", course_type)
+    
     excel_data = generate_marks_template(course_type)
 
     course_code = str(selected_course["course_code"]).strip().replace(" ", "_")

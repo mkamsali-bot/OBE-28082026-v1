@@ -1,0 +1,162 @@
+from services.attainment_service import calculate_co_attainment_percentage
+from services.co_po_service import get_course_mappings
+from services.co_service import get_co_by_id
+
+
+def get_direct_co_po_contribution(course_id, target_score=10):
+    """
+    Report 6 – Direct CO → PO / PSO Contribution.
+
+    Source:
+        Direct CO Assessment (%) from the existing tested
+        attainment service.
+
+    NBA methodology:
+        CO Attainment Level =
+            <60%          -> Level 1
+            >=60% and <70% -> Level 2
+            >=70%         -> Level 3
+
+        Contribution =
+            CO Attainment Level × Mapping Value / 3
+
+    The PO/PSO final row is the average contribution
+    across the course COs.
+    """
+
+    # ---------------------------------------------------------
+    # Existing tested Direct CO Assessment
+    # ---------------------------------------------------------
+    direct = calculate_co_attainment_percentage(
+        course_id,
+        target_score
+    )
+
+    # ---------------------------------------------------------
+    # Existing CO-PO-PSO mapping
+    # ---------------------------------------------------------
+    mappings = get_course_mappings(course_id)
+
+    results = []
+
+    # ---------------------------------------------------------
+    # Build CO contribution rows
+    # ---------------------------------------------------------
+    for mapping in mappings:
+
+        co_id = mapping["co_id"]
+
+        co = get_co_by_id(co_id)
+
+        co_code = (
+            co["co_code"]
+            if co
+            else f"CO{co_id}"
+        )
+
+        attainment_data = direct.get(
+            co_id,
+            {
+                "percentage": 0.0,
+                "co_code": co_code,
+            }
+        )
+
+        percentage = float(
+            attainment_data["percentage"]
+        )
+
+        # -----------------------------------------------------
+        # CO Attainment Level
+        # -----------------------------------------------------
+        if percentage < 60:
+            level = 1.0
+
+        elif percentage < 70:
+            level = 2.0
+
+        else:
+            level = 3.0
+
+        row = {
+            "co_id": co_id,
+            "co_code": co_code,
+            "direct_percentage": percentage,
+            "co_attainment_level": level,
+        }
+
+        # -----------------------------------------------------
+        # PO contribution
+        # -----------------------------------------------------
+        for i in range(1, 13):
+
+            mapping_value = mapping[f"po{i}"] or 0
+
+            if mapping_value == 0:
+                contribution = 0.0
+            else:
+                contribution = round(
+                    level * mapping_value / 3,
+                    2
+                )
+
+            row[f"po{i}"] = contribution
+
+        # -----------------------------------------------------
+        # PSO contribution
+        # -----------------------------------------------------
+        for i in range(1, 4):
+
+            mapping_value = mapping[f"pso{i}"] or 0
+
+            if mapping_value == 0:
+                contribution = 0.0
+            else:
+                contribution = round(
+                    level * mapping_value / 3,
+                    2
+                )
+
+            row[f"pso{i}"] = contribution
+
+        results.append(row)
+
+    # ---------------------------------------------------------
+    # Average PO / PSO contribution across COs
+    # ---------------------------------------------------------
+    average_row = {
+        "co_id": None,
+        "co_code": "AVERAGE",
+        "direct_percentage": None,
+        "co_attainment_level": None,
+    }
+
+    for i in range(1, 13):
+
+        values = [
+            row[f"po{i}"]
+            for row in results
+        ]
+
+        average_row[f"po{i}"] = (
+            round(sum(values) / len(values), 2)
+            if values
+            else 0.0
+        )
+
+    for i in range(1, 4):
+
+        values = [
+            row[f"pso{i}"]
+            for row in results
+        ]
+
+        average_row[f"pso{i}"] = (
+            round(sum(values) / len(values), 2)
+            if values
+            else 0.0
+        )
+
+    results.append(average_row)
+
+    return results

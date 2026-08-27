@@ -167,7 +167,6 @@ def generate_report9_excel(course_id, target_score=10):
     headers = [
         "CO",
         "Final CO Attainment",
-        "Mapping Sum",
     ]
 
     headers += [f"PO{i}" for i in range(1, 13)]
@@ -191,9 +190,8 @@ def generate_report9_excel(course_id, target_score=10):
 
         ws2.cell(row=row, column=1).value = item["co_code"]
         ws2.cell(row=row, column=2).value = item["co_attainment"]
-        ws2.cell(row=row, column=3).value = item["mapping_sum"]
-
-        column = 4
+        
+        column = 3
 
         for i in range(1, 13):
             ws2.cell(
@@ -229,9 +227,9 @@ def generate_report9_excel(course_id, target_score=10):
 
     ws2.column_dimensions["A"].width = 12
     ws2.column_dimensions["B"].width = 22
-    ws2.column_dimensions["C"].width = 15
+    ws2.column_dimensions["C"].width = 10
 
-    for col in range(4, 19):
+    for col in range(3, 18):
         ws2.column_dimensions[
             ws2.cell(
                 row=header_row,
@@ -246,7 +244,7 @@ def generate_report9_excel(course_id, target_score=10):
         min_row=header_row,
         max_row=row - 1,
         min_col=1,
-        max_col=18
+        max_col=17
     ):
         for cell in cells:
             cell.alignment = Alignment(

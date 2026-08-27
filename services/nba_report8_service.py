@@ -1,37 +1,32 @@
-from services.final_attainment_service import calculate_final_co_attainment
 from services.co_po_service import get_course_mappings
 from services.co_service import get_co_by_id
+from services.final_attainment_service import calculate_final_co_attainment
 
 
 def get_final_co_po_contribution(course_id, target_score=10):
 
-    final_co = calculate_final_co_attainment(
-        course_id,
-        target_score
-    )
+    final_co = calculate_final_co_attainment(course_id, target_score)
 
     mappings = get_course_mappings(course_id)
 
     # ---------------------------------------------------------
-    # PO/PSO column totals
+    # Maximum mapping for every PO / PSO column
     # ---------------------------------------------------------
-    po_sums = {
-        f"po{i}": 0
-        for i in range(1, 13)
-    }
+    po_max = {}
 
-    pso_sums = {
-        f"pso{i}": 0
-        for i in range(1, 4)
-    }
+    for i in range(1, 13):
 
-    for mapping in mappings:
+        po_max[f"po{i}"] = max(
+            (mapping[f"po{i}"] or 0) for mapping in mappings
+        )
 
-        for i in range(1, 13):
-            po_sums[f"po{i}"] += mapping[f"po{i}"] or 0
+    pso_max = {}
 
-        for i in range(1, 4):
-            pso_sums[f"pso{i}"] += mapping[f"pso{i}"] or 0
+    for i in range(1, 4):
+
+        pso_max[f"pso{i}"] = max(
+            (mapping[f"pso{i}"] or 0) for mapping in mappings
+        )
 
     results = []
 
@@ -44,11 +39,7 @@ def get_final_co_po_contribution(course_id, target_score=10):
 
         co = get_co_by_id(co_id)
 
-        co_code = (
-            co["co_code"]
-            if co
-            else f"CO{co_id}"
-        )
+        co_code = co["co_code"] if co else f"CO{co_id}"
 
         values = final_co.get(
             co_id,
@@ -56,12 +47,10 @@ def get_final_co_po_contribution(course_id, target_score=10):
                 "direct": 0.0,
                 "indirect": 0.0,
                 "final": 0.0,
-            }
+            },
         )
 
-        final_attainment = float(
-            values["final"]
-        )
+        final_attainment = float(values["final"])
 
         row = {
             "co_id": co_id,
@@ -73,15 +62,12 @@ def get_final_co_po_contribution(course_id, target_score=10):
         for i in range(1, 13):
 
             strength = mapping[f"po{i}"] or 0
-            denominator = po_sums[f"po{i}"]
+            maximum = po_max[f"po{i}"]
 
-            if strength == 0 or denominator == 0:
-                value = 0.0
+            if strength == 0 or maximum == 0:
+                value = 0.00
             else:
-                value = round(
-                    final_attainment * strength / denominator,
-                    2
-                )
+                value = round(final_attainment * strength / maximum, 2)
 
             row[f"po{i}"] = value
 
@@ -89,15 +75,12 @@ def get_final_co_po_contribution(course_id, target_score=10):
         for i in range(1, 4):
 
             strength = mapping[f"pso{i}"] or 0
-            denominator = pso_sums[f"pso{i}"]
+            maximum = pso_max[f"pso{i}"]
 
-            if strength == 0 or denominator == 0:
-                value = 0.0
+            if strength == 0 or maximum == 0:
+                value = 0.00
             else:
-                value = round(
-                    final_attainment * strength / denominator,
-                    2
-                )
+                value = round(final_attainment * strength / maximum, 2)
 
             row[f"pso{i}"] = value
 

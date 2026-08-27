@@ -40,11 +40,151 @@
         </div>
     </div>
 
-    <div class="alert alert-info">
-        <strong>Final CO Attainment:</strong>
-        80% Direct + 20% Indirect
+    <div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-secondary text-white">
+        {{ documentation.title }}
     </div>
 
+    <div class="card-body">
+
+        <h6 class="text-primary">Formula</h6>
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-8">
+
+                <table class="table table-borderless mb-0">
+
+                    <tr>
+
+                        <td width="30%" class="text-end align-middle">
+
+                            <strong style="font-size:20px;">
+                                Contribution =
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            <div class="text-center fw-semibold">
+                                Final CO Attainment Level × Mapping Strength
+                            </div>
+
+                            <hr style="
+                                border:2px solid black;
+                                opacity:1;
+                                margin:6px 0;
+                            ">
+
+                            <div class="text-center fw-semibold">
+                                Maximum Mapping in the Corresponding
+                                PO / PSO Column
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h6>Specimen Calculation</h6>
+
+        <div class="card border-warning mb-3">
+
+            <div class="card-body bg-light">
+
+                {% for line in documentation.specimen %}
+
+                    {% if line %}
+                        <div>{{ line }}</div>
+                    {% else %}
+                        <br>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h6 class="text-success">
+            Interpretation
+        </h6>
+
+        <p class="mb-0">
+            {{ documentation.interpretation }}
+        </p>
+
+    </div>
+
+</div>
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        Attainment Level Criteria
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-sm mb-0">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Final CO Attainment (%)</th>
+
+                    <th>Attainment Level</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>&lt; 60</td>
+
+                    <td>Level 1</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>60 – 69.99</td>
+
+                    <td>Level 2</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>&ge; 70</td>
+
+                    <td>Level 3</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
     <div class="card shadow-sm">
 
         <div class="card-header bg-primary text-white">
@@ -63,7 +203,7 @@
                         <tr>
                             <th>CO</th>
                             <th>Final CO Attainment</th>
-                            <th>Mapping Sum</th>
+                            <th>CO Attainment Level</th>
 
                             {% for i in range(1, 13) %}
                             <th>PO{{ i }}</th>
@@ -89,9 +229,8 @@
                             </td>
 
                             <td class="text-center">
-                                {{ row.mapping_sum }}
+                            {{ "%.2f"|format(row.co_attainment) }}
                             </td>
-
                             {% for i in range(1, 13) %}
                             <td class="text-center">
                                 {{ "%.2f"|format(row["po" ~ i]) }}

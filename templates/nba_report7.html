@@ -1,129 +1,260 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="container mt-4">
 
+    <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="text-primary mb-0">
-            Report 7 – Indirect CO → PO Contribution
+            Report 7 – Indirect CO → PO / PSO Contribution
         </h2>
-
-        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}"
-           class="btn btn-secondary">
+        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}" class="btn btn-secondary">
             ← Back to NBA Reports
         </a>
     </div>
 
     <hr>
 
+    <!-- Course Info Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-
             <div class="row">
                 <div class="col-md-4">
-                    <strong>Course Code:</strong>
-                    {{ course.course_code }}
+                    <strong>Course Code:</strong> {{ course.course_code }}
                 </div>
-
                 <div class="col-md-4">
-                    <strong>Course Name:</strong>
-                    {{ course.course_name }}
+                    <strong>Course Name:</strong> {{ course.course_name }}
                 </div>
-
                 <div class="col-md-4">
-                    <strong>Course Type:</strong>
-                    {{ course.course_type }}
+                    <strong>Course Type:</strong> {{ course.course_type }}
                 </div>
             </div>
-
         </div>
     </div>
 
-    <div class="card shadow-sm">
-
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                Indirect CO → PO / PSO Contribution
-            </h5>
+    <!-- Documentation Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            {{ documentation.title }}
         </div>
-
         <div class="card-body">
+            <h6 class="text-primary">Formula  
+                <div class="row justify-content-center">
 
-            <div class="table-responsive">
+    <div class="col-md-8">
 
-                <table class="table table-bordered table-striped table-sm">
+        <table class="table table-borderless mb-0">
 
-                    <thead class="table-light">
-                        <tr>
-                            <th>CO</th>
-                            <th>Indirect CO Attainment</th>
-                            <th>Mapping Sum</th>
+            <tr>
 
-                            {% for i in range(1, 13) %}
-                            <th>PO{{ i }}</th>
-                            {% endfor %}
+                <td width="28%" class="align-middle text-end">
 
-                            {% for i in range(1, 4) %}
-                            <th>PSO{{ i }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
+                    <strong style="font-size:20px;">
 
-                    <tbody>
+                        Contribution =
 
-                        {% for row in contribution %}
+                    </strong>
 
-                        <tr>
-                            <td>
-                                <strong>{{ row.co_code }}</strong>
-                            </td>
+                </td>
 
-                            <td class="text-center">
-                                {{ "%.2f"|format(row.co_attainment) }}
-                            </td>
+                <td>
 
-                            <td class="text-center">
-                                {{ row.mapping_sum }}
-                            </td>
+                    <div class="text-center fw-semibold">
 
-                            {% for i in range(1, 13) %}
-                            <td class="text-center">
-                                {{ "%.2f"|format(row["po" ~ i]) }}
-                            </td>
-                            {% endfor %}
+                        Indirect CO Attainment Level × Mapping Strength
 
-                            {% for i in range(1, 4) %}
-                            <td class="text-center">
-                                {{ "%.2f"|format(row["pso" ~ i]) }}
-                            </td>
-                            {% endfor %}
+                    </div>
 
-                        </tr>
+                    <hr style="
+                        border:2px solid black;
+                        opacity:1;
+                        margin:6px 0;
+                    ">
 
-                        {% endfor %}
+                    <div class="text-center fw-semibold">
 
-                    </tbody>
+                        Maximum Mapping in the Corresponding
+                        PO / PSO Column
 
-                </table>
+                    </div>
 
-            </div>
+                </td>
 
-        </div>
+            </tr>
+
+        </table>
+
     </div>
 
-    <div class="mt-4">
+</div>
+        <hr style="border:2px solid black;
+                   opacity:1;
+                   margin:8px 0;">
 
-        <a href="/nba-report7-excel?course_id={{ course_id }}"
-           class="btn btn-success">
+        <div class="text-center fw-semibold"
+             style="font-size:18px;">
 
-            <i class="bi bi-file-earmark-excel"></i>
-            Download Excel
+            Maximum Mapping in the Corresponding
+            PO / PSO Column
 
-        </a>
+        </div>
 
     </div>
 
 </div>
 
+    <div style="font-size:18px;">
+
+        CO Attainment Level × Mapping Strength
+
+    </div>
+
+    <hr class="my-2">
+
+    <div style="font-size:18px;">
+
+        Maximum Mapping in the Corresponding PO / PSO Column
+
+    </div>
+
+</div>
+            <hr>
+
+            <h6>Specimen Calculation</h6>
+            <div class="card border-warning mb-3">
+                <div class="card-body bg-light">
+                    {% for line in documentation.specimen %}
+                        {% if line %}
+                            <div>{{ line }}</div>
+                        {% else %}
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr>
+
+            <h6 class="text-success">Interpretation</h6>
+            <p class="mb-0">
+                {{ documentation.interpretation }}
+            </p>
+        </div>
+    </div>
+    <!-- ===================================================== -->
+<!-- Attainment Level Criteria -->
+<!-- ===================================================== -->
+
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-dark text-white">
+
+        Attainment Level Criteria
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-sm mb-0">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Indirect CO Attainment (%)</th>
+
+                    <th>CO Attainment Level</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>&lt; 60</td>
+
+                    <td>Level 1</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>60 – 69.99</td>
+
+                    <td>Level 2</td>
+
+                </tr>
+
+                <tr>
+
+                    <td>&ge; 70</td>
+
+                    <td>Level 3</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+    <!-- Contribution Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                Indirect CO → PO / PSO Contribution
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-sm text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start">CO</th>
+                            <th>Indirect CO Attainment</th>
+                            
+                            {% for i in range(1, 13) %}
+                                <th>PO{{ i }}</th>
+                            {% endfor %}
+                            {% for i in range(1, 4) %}
+                                <th>PSO{{ i }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in contribution %}
+                            <tr>
+                                <td class="text-start">
+                                    <strong>{{ row.co_code }}</strong>
+                                </td>
+                                <td>{{ "%.2f"|format(row.indirect_percentage) }}</td>
+
+                                <td>{{ row.co_attainment }}</td>
+                                
+                                {% for i in range(1, 13) %}
+                                    <td>{{ "%.2f"|format(row["po" ~ i]) }}</td>
+                                {% endfor %}
+                                {% for i in range(1, 4) %}
+                                    <td>{{ "%.2f"|format(row["pso" ~ i]) }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="mt-4 mb-4">
+        <a href="/nba-report7-excel?course_id={{ course_id }}" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel"></i> Download Excel
+        </a>
+    </div>
+
+</div>
 {% endblock %}

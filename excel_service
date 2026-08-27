@@ -1,0 +1,222 @@
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font
+
+from services.nba_report6_service import (
+    get_direct_co_po_contribution
+)
+from services.nba_report_service import get_course_details
+
+
+def generate_report6_excel(course_id, target_score=10):
+
+    course = get_course_details(course_id)
+
+    contribution = get_direct_co_po_contribution(
+        course_id,
+        target_score
+    )
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Direct CO PO Contribution"
+
+    # =========================================================
+    # Title
+    # =========================================================
+    ws["A1"] = "NBA REPORT 6"
+    ws["A2"] = "Direct CO → PO / PSO Contribution"
+
+    ws["A1"].font = Font(size=16, bold=True)
+    ws["A2"].font = Font(size=14, bold=True)
+
+    ws["A1"].alignment = Alignment(horizontal="center")
+    ws["A2"].alignment = Alignment(horizontal="center")
+
+    # =========================================================
+    # Course Details
+    # =========================================================
+    ws["A4"] = "Course Code"
+    ws["B4"] = course["course_code"]
+
+    ws["A5"] = "Course Name"
+    ws["B5"] = course["course_name"]
+
+    ws["A6"] = "Course Type"
+    ws["B6"] = course["course_type"]
+
+    ws["A7"] = "Target Score"
+    ws["B7"] = target_score
+
+    ws["A8"] = "Attainment Level Rule"
+    ws["B8"] = "<60: Level 1 | 60–<70: Level 2 | >=70: Level 3"
+
+    ws["A9"] = "Contribution Formula"
+    ws["B9"] = "CO Attainment Level × Mapping / 3"
+
+    # =========================================================
+    # Headers
+    # =========================================================
+    headers = [
+        "CO",
+        "Direct CO Assessment %",
+        "CO Attainment Level",
+    ]
+
+    headers += [f"PO{i}" for i in range(1, 13)]
+    headers += [f"PSO{i}" for i in range(1, 4)]
+
+    header_row = 11
+
+    for col, header in enumerate(headers, start=1):
+
+        cell = ws.cell(
+            row=header_row,
+            column=col
+        )
+
+        cell.value = header
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(
+            horizontal="center",
+            vertical="center",
+            wrap_text=True
+        )
+
+    # =========================================================
+    # Data Rows
+    # =========================================================
+    row = header_row + 1
+
+    for item in contribution:
+
+        ws.cell(
+            row=row,
+            column=1
+        ).value = item["co_code"]
+
+        # AVERAGE row has no direct percentage / level
+        if item.get("direct_percentage") is not None:
+            ws.cell(
+                row=row,
+                column=2
+            ).value = item["direct_percentage"]
+
+        if item.get("co_attainment_level") is not None:
+            ws.cell(
+                row=row,
+                column=3
+            ).value = item["co_attainment_level"]
+
+        # PO1 - PO12
+        column = 4
+
+        for i in range(1, 13):
+
+            value = item.get(
+                f"po{i}",
+                0.0
+            )
+
+            ws.cell(
+                row=row,
+                column=column
+            ).value = round(
+                float(value or 0),
+                2
+            )
+
+            column += 1
+
+        # PSO1 - PSO3
+        for i in range(1, 4):
+
+            value = item.get(
+                f"pso{i}",
+                0.0
+            )
+
+            ws.cell(
+                row=row,
+                column=column
+            ).value = round(
+                float(value or 0),
+                2
+            )
+
+            column += 1
+
+        row += 1
+
+    # =========================================================
+    # Styling
+    # =========================================================
+
+    # Highlight AVERAGE row
+    if contribution:
+
+        average_excel_row = row - 1
+
+        if contribution[-1].get("co_code") == "AVERAGE":
+
+            for col in range(1, 19):
+
+                cell = ws.cell(
+                    row=average_excel_row,
+                    column=col
+                )
+
+                cell.font = Font(bold=True)
+
+    # Number formatting
+    for r in range(header_row + 1, row):
+
+        if ws.cell(r, 2).value is not None:
+            ws.cell(r, 2).number_format = "0.00"
+
+        if ws.cell(r, 3).value is not None:
+            ws.cell(r, 3).number_format = "0"
+
+        for c in range(4, 19):
+            ws.cell(r, c).number_format = "0.00"
+
+    # =========================================================
+    # Column Widths
+    # =========================================================
+    ws.column_dimensions["A"].width = 12
+    ws.column_dimensions["B"].width = 24
+    ws.column_dimensions["C"].width = 20
+
+    for col in range(4, 19):
+
+        ws.column_dimensions[
+            ws.cell(
+                row=header_row,
+                column=col
+            ).column_letter
+        ].width = 10
+
+    # =========================================================
+    # Alignment
+    # =========================================================
+    for cells in ws.iter_rows(
+        min_row=header_row,
+        max_row=row - 1,
+        min_col=1,
+        max_col=18
+    ):
+
+        for cell in cells:
+
+            cell.alignment = Alignment(
+                horizontal="center",
+                vertical="center",
+                wrap_text=True
+            )
+
+    # Course information alignment
+    for r in range(4, 10):
+        ws.cell(r, 1).font = Font(bold=True)
+
+    ws.freeze_panes = "A12"
+
+    return wb
