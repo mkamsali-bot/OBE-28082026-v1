@@ -38,94 +38,30 @@
             {{ documentation.title }}
         </div>
         <div class="card-body">
-            <h6 class="text-primary">Formula  <div class="row justify-content-center">
+            <h6 class="text-primary">Formula</h6>
+            <div class="row justify-content-center my-3">
+                <div class="col-md-8">
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <td width="28%" class="align-middle text-end">
+                                <strong style="font-size:20px;">
+                                    Contribution =
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="text-center fw-semibold" style="font-size:18px;">
+                                    CO Attainment Level × Mapping Strength
+                                </div>
+                                <hr style="border:2px solid black; opacity:1; margin:6px 0;">
+                                <div class="text-center fw-semibold" style="font-size:18px;">
+                                    Maximum Mapping in the Corresponding PO / PSO Column
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-    <div class="col-md-8">
-
-        <table class="table table-borderless mb-0">
-
-            <tr>
-
-                <td width="28%" class="align-middle text-end">
-
-                    <strong style="font-size:20px;">
-
-                        Contribution =
-
-                    </strong>
-
-                </td>
-
-                <td>
-
-                    <div class="text-center fw-semibold">
-
-                        CO Attainment Level × Mapping Strength
-
-                    </div>
-
-                    <hr style="
-                        border:2px solid black;
-                        opacity:1;
-                        margin:6px 0;
-                    ">
-
-                    <div class="text-center fw-semibold">
-
-                        Maximum Mapping in the Corresponding
-                        PO / PSO Column
-
-                    </div>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
-
-</div>
-</h6>
-           
-        <div class="text-center fw-semibold"
-             style="font-size:18px;">
-
-            CO Attainment Level × Mapping Strength
-
-        </div>
-
-        <hr style="border:2px solid black;
-                   opacity:1;
-                   margin:8px 0;">
-
-        <div class="text-center fw-semibold"
-             style="font-size:18px;">
-
-            Maximum Mapping in the Corresponding
-            PO / PSO Column
-
-        </div>
-
-    </div>
-
-</div>
-
-    <div style="font-size:18px;">
-
-        CO Attainment Level × Mapping Strength
-
-    </div>
-
-    <hr class="my-2">
-
-    <div style="font-size:18px;">
-
-        Maximum Mapping in the Corresponding PO / PSO Column
-
-    </div>
-
-</div>
             <hr>
 
             <h6>Specimen Calculation</h6>
@@ -149,67 +85,38 @@
             </p>
         </div>
     </div>
-    <!-- ===================================================== -->
-<!-- Attainment Level Criteria -->
-<!-- ===================================================== -->
 
-<div class="card shadow-sm mb-4">
-
-    <div class="card-header bg-dark text-white">
-
-        Attainment Level Criteria
-
+    <!-- Attainment Level Criteria -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            Attainment Level Criteria
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-sm mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Direct CO Attainment (%)</th>
+                        <th>Attainment Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&lt; 60</td>
+                        <td>Level 1</td>
+                    </tr>
+                    <tr>
+                        <td>60 – 69.99</td>
+                        <td>Level 2</td>
+                    </tr>
+                    <tr>
+                        <td>&ge; 70</td>
+                        <td>Level 3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="card-body">
-
-        <table class="table table-bordered table-sm mb-0">
-
-            <thead class="table-light">
-
-                <tr>
-
-                    <th>Direct CO Attainment (%)</th>
-
-                    <th>Attainment Level</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr>
-
-                    <td>&lt; 60</td>
-
-                    <td>Level 1</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>60 – 69.99</td>
-
-                    <td>Level 2</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>&ge; 70</td>
-
-                    <td>Level 3</td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
     <!-- Contribution Table Card -->
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
@@ -222,9 +129,9 @@
                 <table class="table table-bordered table-striped table-sm text-center align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-start">CO</th>
-                            <th>Direct CO Attainment</th>
-                            <th>Mapping Sum</th>
+                            <th>CO</th>
+                            <th>Direct CO Attainment (%)</th>
+                            <th>CO Attainment Level</th>
                             {% for i in range(1, 13) %}
                                 <th>PO{{ i }}</th>
                             {% endfor %}
@@ -239,8 +146,8 @@
                                 <td class="text-start">
                                     <strong>{{ row.co_code }}</strong>
                                 </td>
-                                <td>{{ "%.2f"|format(row.co_attainment) }}</td>
-                                <td>{{ row.mapping_sum }}</td>
+                                <td>{{ "%.2f"|format(row.co_percentage) }}</td>
+                                <td>{{ row.co_level }}</td>
                                 {% for i in range(1, 13) %}
                                     <td>{{ "%.2f"|format(row["po" ~ i]) }}</td>
                                 {% endfor %}

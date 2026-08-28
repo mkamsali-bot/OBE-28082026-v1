@@ -165,8 +165,9 @@ def generate_report9_excel(course_id, target_score=10):
     ws2["B8"] = "80% Direct + 20% Indirect"
 
     headers = [
-        "CO",
-        "Final CO Attainment",
+    "CO",
+    "Final CO Attainment (%)",
+    "Final CO Attainment Level",
     ]
 
     headers += [f"PO{i}" for i in range(1, 13)]
@@ -189,9 +190,10 @@ def generate_report9_excel(course_id, target_score=10):
     for item in contribution:
 
         ws2.cell(row=row, column=1).value = item["co_code"]
-        ws2.cell(row=row, column=2).value = item["co_attainment"]
-        
-        column = 3
+        ws2.cell(row=row, column=2).value = item["co_percentage"]
+        ws2.cell(row=row, column=3).value = item["co_level"]
+
+        column = 4
 
         for i in range(1, 13):
             ws2.cell(
@@ -226,10 +228,10 @@ def generate_report9_excel(course_id, target_score=10):
         ].width = 10
 
     ws2.column_dimensions["A"].width = 12
-    ws2.column_dimensions["B"].width = 22
+    ws2.column_dimensions["B"].width = 20
     ws2.column_dimensions["C"].width = 10
 
-    for col in range(3, 18):
+    for col in range(4, 19):
         ws2.column_dimensions[
             ws2.cell(
                 row=header_row,
@@ -244,7 +246,7 @@ def generate_report9_excel(course_id, target_score=10):
         min_row=header_row,
         max_row=row - 1,
         min_col=1,
-        max_col=17
+        max_col=18
     ):
         for cell in cells:
             cell.alignment = Alignment(

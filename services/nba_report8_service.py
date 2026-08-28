@@ -1,7 +1,8 @@
 from services.co_po_service import get_course_mappings
 from services.co_service import get_co_by_id
-from services.final_attainment_service import calculate_final_co_attainment
-
+from services.final_attainment_service import (
+    calculate_final_co_attainment,
+)
 
 def get_final_co_po_contribution(course_id, target_score=10):
 
@@ -49,13 +50,20 @@ def get_final_co_po_contribution(course_id, target_score=10):
                 "final": 0.0,
             },
         )
-
         final_attainment = float(values["final"])
+
+        if final_attainment < 60:
+            final_level = 1.0
+        elif final_attainment < 70:
+            final_level = 2.0
+        else:
+            final_level = 3.0
 
         row = {
             "co_id": co_id,
             "co_code": co_code,
-            "co_attainment": final_attainment,
+            "co_percentage": final_attainment,
+            "co_level": final_level,
         }
 
         # PO
@@ -67,7 +75,7 @@ def get_final_co_po_contribution(course_id, target_score=10):
             if strength == 0 or maximum == 0:
                 value = 0.00
             else:
-                value = round(final_attainment * strength / maximum, 2)
+                value = round(final_level * strength / maximum, 2)
 
             row[f"po{i}"] = value
 
@@ -80,7 +88,7 @@ def get_final_co_po_contribution(course_id, target_score=10):
             if strength == 0 or maximum == 0:
                 value = 0.00
             else:
-                value = round(final_attainment * strength / maximum, 2)
+                value = round(final_level * strength / maximum, 2)
 
             row[f"pso{i}"] = value
 

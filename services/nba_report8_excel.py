@@ -53,7 +53,8 @@ def generate_report8_excel(course_id, target_score=10):
     # ---------------------------------------------------------
     headers = [
         "CO",
-        "Final CO Attainment",
+        "Final CO Attainment (%)",
+        "Final CO Attainment Level",
     ]
 
     headers += [f"PO{i}" for i in range(1, 13)]
@@ -85,9 +86,14 @@ def generate_report8_excel(course_id, target_score=10):
         ws.cell(
             row=row,
             column=2
-        ).value = item["co_attainment"]
+        ).value = item["co_percentage"]
 
-        column = 3
+        ws.cell(
+            row=row,
+            column=3
+        ).value = item["co_level"]
+
+        column = 4
 
         for i in range(1, 13):
 
@@ -113,10 +119,10 @@ def generate_report8_excel(course_id, target_score=10):
     # Column Widths
     # ---------------------------------------------------------
     ws.column_dimensions["A"].width = 12
-    ws.column_dimensions["B"].width = 22
+    ws.column_dimensions["B"].width = 20
     ws.column_dimensions["C"].width = 10
 
-    for col in range(3, 18):
+    for col in range(4, 19):
         ws.column_dimensions[
             ws.cell(
                 row=header_row,
@@ -131,7 +137,7 @@ def generate_report8_excel(course_id, target_score=10):
         min_row=header_row,
         max_row=row - 1,
         min_col=1,
-        max_col=17
+        max_col=18
     ):
         for cell in cells:
             cell.alignment = Alignment(

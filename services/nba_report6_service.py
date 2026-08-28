@@ -65,7 +65,7 @@ def get_direct_co_po_contribution(course_id):
         row = {
             "co_id": co_id,
             "co_code": co_code,
-            "co_attainment": float(f"{co_attainment:.2f}"),
+            "co_percentage": co_attainment,
             "co_level": co_level,
         }
 

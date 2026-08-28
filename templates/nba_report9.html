@@ -5,12 +5,11 @@
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-primary mb-0">
-            Report 9 – Final PO & PSO Attainment
+        <h2 class="text-primary fw-bold" style="font-size:32px;">
+            Report 9 – Final PO & PSO Attainment Summary
         </h2>
 
-        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}"
-           class="btn btn-secondary">
+        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}" class="btn btn-secondary">
             ← Back to NBA Reports
         </a>
     </div>
@@ -19,149 +18,105 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-
             <div class="row">
                 <div class="col-md-4">
-                    <strong>Course Code:</strong>
+                    <strong>Course Code</strong><br>
                     {{ course.course_code }}
                 </div>
-
                 <div class="col-md-4">
-                    <strong>Course Name:</strong>
+                    <strong>Course Name</strong><br>
                     {{ course.course_name }}
                 </div>
-
                 <div class="col-md-4">
-                    <strong>Course Type:</strong>
+                    <strong>Course Type</strong><br>
                     {{ course.course_type }}
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ===================================================== -->
-<!-- Documentation -->
-<!-- ===================================================== -->
-
-<div class="card shadow-sm mb-4">
-
-    <div class="card-header bg-secondary text-white">
-        {{ documentation.title }}
-    </div>
-
-    <div class="card-body">
-
-        <h5 class="text-primary mb-3">
-            Formula
-        </h5>
-
-        <div class="row justify-content-center">
-
-            <div class="col-md-8">
-
-                <table class="table table-borderless mb-0">
-
-                    <tr>
-
-                        <td width="30%" class="text-end align-middle">
-
-                            <strong style="font-size:20px;">
-
-                                Final PO / PSO Attainment =
-
-                            </strong>
-
-                        </td>
-
-                        <td>
-
-                            <div class="text-center fw-semibold">
-
-                                Sum of Final CO → PO / PSO Contributions
-
-                            </div>
-
-                            <hr style="border:2px solid black; opacity:1; margin:6px 0;">
-
-                            <div class="text-center fw-semibold">
-
-                                Number of COs mapped to the corresponding
-                                PO / PSO
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <hr>
-
-        <h5 class="text-primary">
-            Specimen Calculation
-        </h5>
-
-        <div class="card border-warning mb-3">
-
-            <div class="card-body bg-light">
-
-                {% for line in documentation.specimen %}
-
-                    {% if line %}
-
-                        <div>{{ line }}</div>
-
-                    {% else %}
-
-                        <br>
-
-                    {% endif %}
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-        <hr>
-
-        <h5 class="text-success">
-
-            Interpretation
-
-        </h5>
-
-        <p class="mb-0">
-
-            {{ documentation.interpretation }}
-
-        </p>
-
-    </div>
-
-</div>
-
-    <!-- Final PO Attainment -->
+    <!-- Documentation -->
     <div class="card shadow-sm mb-4">
-
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                Final PO Attainment
-            </h5>
+        <div class="card-header bg-secondary text-white">
+            {{ documentation.title }}
         </div>
 
         <div class="card-body">
+            <h5 class="text-primary mb-3">Objective</h5>
 
+            <div class="alert alert-light border" style="font-size:18px; line-height:1.8;">
+                {{ documentation.objective }}
+            </div>
+
+            <h5 class="text-primary mb-3">Formula</h5>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <table class="table table-borderless mb-0">
+                        <tr>
+                            <td width="30%" class="text-end align-middle">
+                                <strong style="font-size:20px;">
+                                    Final PO / PSO Attainment =
+                                </strong>
+                            </td>
+                            <td>
+                                <div class="text-center fw-semibold">
+                                    Sum of Final CO → PO / PSO Contributions
+                                </div>
+                                <hr style="border:2px solid black; opacity:1; margin:6px 0;">
+                                <div class="text-center fw-semibold">
+                                    Number of COs mapped to the corresponding PO / PSO
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="text-primary">Specimen Calculation</h5>
+
+            <div class="card border-warning mb-3">
+                <div class="card-body bg-light">
+                    {% for line in documentation.specimen %}
+                        {% if line %}
+                            <div>{{ line }}</div>
+                        {% else %}
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="text-info fw-bold"
+    style="font-size:22px;">
+
+    Interpretation
+
+</h5>
+
+<div class="alert alert-info"
+     style="font-size:18px;
+            line-height:1.8;">
+
+    {{ documentation.interpretation }}
+
+</div>
+        </div>
+    </div>
+
+    <!-- Final PO Attainment -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Final PO Attainment(%)</h5>
+        </div>
+
+        <div class="card-body">
             <div class="table-responsive">
-
                 <table class="table table-bordered table-striped">
-
                     <thead class="table-light">
                         <tr>
                             {% for i in range(1, 13) %}
@@ -169,7 +124,6 @@
                             {% endfor %}
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr>
                             {% for i in range(1, 13) %}
@@ -179,29 +133,20 @@
                             {% endfor %}
                         </tr>
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
     </div>
 
     <!-- Final PSO Attainment -->
     <div class="card shadow-sm mb-4">
-
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                Final PSO Attainment
-            </h5>
+            <h5 class="mb-0">Final PSO Attainment(%)</h5>
         </div>
 
         <div class="card-body">
-
             <div class="table-responsive">
-
                 <table class="table table-bordered table-striped">
-
                     <thead class="table-light">
                         <tr>
                             <th>PSO1</th>
@@ -209,51 +154,38 @@
                             <th>PSO3</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr>
                             <td class="text-center">
                                 {{ pso.get("PSO1", 0) }}
                             </td>
-
                             <td class="text-center">
                                 {{ pso.get("PSO2", 0) }}
                             </td>
-
                             <td class="text-center">
                                 {{ pso.get("PSO3", 0) }}
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
     </div>
 
     <!-- Final CO → PO / PSO Contribution -->
     <div class="card shadow-sm mb-4">
-
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                Final CO → PO / PSO Contribution
-            </h5>
+            <h5 class="mb-0">Final CO → PO / PSO Contribution</h5>
         </div>
 
         <div class="card-body">
-
             <div class="table-responsive">
-
                 <table class="table table-bordered table-striped table-sm">
-
                     <thead class="table-light">
-
                         <tr>
                             <th>CO</th>
-                            <th>Final CO Attainment</th>
-                            
+                            <th>Final CO Attainment (%)</th>
+                            <th>Final CO Attainment Level</th>
 
                             {% for i in range(1, 13) %}
                             <th>PO{{ i }}</th>
@@ -263,24 +195,22 @@
                             <th>PSO{{ i }}</th>
                             {% endfor %}
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         {% for row in contribution %}
-
                         <tr>
-
                             <td>
                                 <strong>{{ row.co_code }}</strong>
                             </td>
 
                             <td class="text-center">
-                                {{ "%.2f"|format(row.co_attainment) }}
+                                {{ "%.2f"|format(row.co_percentage) }}
                             </td>
 
-                            
+                            <td class="text-center">
+                                {{ row.co_attainment }}
+                            </td>
+
                             {% for i in range(1, 13) %}
                             <td class="text-center">
                                 {{ "%.2f"|format(row["po" ~ i]) }}
@@ -292,31 +222,66 @@
                                 {{ "%.2f"|format(row["pso" ~ i]) }}
                             </td>
                             {% endfor %}
-
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
     </div>
 
-    <div class="mt-4">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
 
-        <a href="/nba-report9-excel?course_id={{ course_id }}"
-           class="btn btn-success">
+    <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}"
+       class="btn btn-secondary btn-lg">
 
-            <i class="bi bi-file-earmark-excel"></i>
-            Download Excel
+        <i class="bi bi-arrow-left-circle"></i>
 
-        </a>
+        Back to NBA Reports
+
+    </a>
+
+    <a href="/nba-report9-excel?course_id={{ course_id }}"
+       class="btn btn-success btn-lg">
+
+        <i class="bi bi-file-earmark-excel"></i>
+
+        Download Excel
+
+    </a>
+
+</div>
+<!-- ======================================================= -->
+<!-- Footer -->
+<!-- ======================================================= -->
+
+<div class="card border-0 mt-4">
+
+    <div class="card-body text-center text-muted">
+
+        <hr>
+
+        <p class="mb-1"
+           style="font-size:14px;">
+
+            <strong>
+
+                Outcome Based Education Automation System
+
+            </strong>
+
+        </p>
+
+        <p class="mb-0"
+           style="font-size:14px;">
+
+            NBA Accreditation Reporting Module
+
+        </p>
 
     </div>
+
+</div>
 
 </div>
 

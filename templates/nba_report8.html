@@ -1,273 +1,230 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-primary mb-0">
-            Report 8 – Final CO → PO Contribution
+    <!-- ======================================================= -->
+    <!-- Report Header -->
+    <!-- ======================================================= -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold mb-0">
+            Report 8 – Final CO → PO / PSO Contribution
         </h2>
-
-        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}"
-           class="btn btn-secondary">
-            ← Back to NBA Reports
+        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle" aria-hidden="true"></i> Back to NBA Reports
         </a>
     </div>
 
-    <hr>
+    <hr class="mb-4">
 
+    <!-- ======================================================= -->
+    <!-- Course Information -->
+    <!-- ======================================================= -->
     <div class="card shadow-sm mb-4">
-        <div class="card-body">
-
-            <div class="row">
-                <div class="col-md-4">
-                    <strong>Course Code:</strong>
-                    {{ course.course_code }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Course Name:</strong>
-                    {{ course.course_name }}
-                </div>
-
-                <div class="col-md-4">
-                    <strong>Course Type:</strong>
-                    {{ course.course_type }}
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="card shadow-sm mb-4">
-
-    <div class="card-header bg-secondary text-white">
-        {{ documentation.title }}
-    </div>
-
-    <div class="card-body">
-
-        <h6 class="text-primary">Formula</h6>
-
-        <div class="row justify-content-center">
-
-            <div class="col-md-8">
-
-                <table class="table table-borderless mb-0">
-
-                    <tr>
-
-                        <td width="30%" class="text-end align-middle">
-
-                            <strong style="font-size:20px;">
-                                Contribution =
-                            </strong>
-
-                        </td>
-
-                        <td>
-
-                            <div class="text-center fw-semibold">
-                                Final CO Attainment Level × Mapping Strength
-                            </div>
-
-                            <hr style="
-                                border:2px solid black;
-                                opacity:1;
-                                margin:6px 0;
-                            ">
-
-                            <div class="text-center fw-semibold">
-                                Maximum Mapping in the Corresponding
-                                PO / PSO Column
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <hr>
-
-        <h6>Specimen Calculation</h6>
-
-        <div class="card border-warning mb-3">
-
-            <div class="card-body bg-light">
-
-                {% for line in documentation.specimen %}
-
-                    {% if line %}
-                        <div>{{ line }}</div>
-                    {% else %}
-                        <br>
-                    {% endif %}
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-        <hr>
-
-        <h6 class="text-success">
-            Interpretation
-        </h6>
-
-        <p class="mb-0">
-            {{ documentation.interpretation }}
-        </p>
-
-    </div>
-
-</div>
-<div class="card shadow-sm mb-4">
-
-    <div class="card-header bg-dark text-white">
-
-        Attainment Level Criteria
-
-    </div>
-
-    <div class="card-body">
-
-        <table class="table table-bordered table-sm mb-0">
-
-            <thead class="table-light">
-
-                <tr>
-
-                    <th>Final CO Attainment (%)</th>
-
-                    <th>Attainment Level</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <tr>
-
-                    <td>&lt; 60</td>
-
-                    <td>Level 1</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>60 – 69.99</td>
-
-                    <td>Level 2</td>
-
-                </tr>
-
-                <tr>
-
-                    <td>&ge; 70</td>
-
-                    <td>Level 3</td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-    <div class="card shadow-sm">
-
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                Final CO → PO / PSO Contribution
-            </h5>
+            <h5 class="mb-0 fw-bold fs-5">Course Information</h5>
         </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <strong>Course Code :</strong> {{ course.course_code }}
+                </div>
+                <div class="col-md-5">
+                    <strong>Course Name :</strong> {{ course.course_name }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Course Type :</strong> {{ course.course_type }}
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- ======================================================= -->
+    <!-- Documentation -->
+    <!-- ======================================================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0 fw-bold fs-5">{{ documentation.title }}</h5>
+        </div>
         <div class="card-body">
 
+            <!-- Objective -->
+            <h5 class="text-primary fw-bold fs-5">Objective</h5>
+            <div class="alert alert-light border fs-6 lh-base">
+                {{ documentation.objective }}
+            </div>
+
+            <!-- Formula -->
+            <h5 class="text-primary fw-bold mt-4 fs-5">Formula</h5>
+            <div class="card border-info shadow-sm mb-4">
+                <div class="card-body">
+                    <table class="table table-borderless align-middle mb-0">
+                        <tbody>
+                            <tr>
+                                <td style="width: 32%;" class="text-end fw-bold fs-5">
+                                    Contribution =
+                                </td>
+                                <td>
+                                    <div class="text-center fw-bold fs-6">
+                                        Final CO Attainment Level × Mapping Strength
+                                    </div>
+                                    <hr class="my-2 border-2 border-dark opacity-100">
+                                    <div class="text-center fw-bold fs-6">
+                                        Maximum Mapping in the Corresponding PO / PSO Column
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Specimen Calculation -->
+            <h5 class="text-warning fw-bold fs-5">Specimen Calculation</h5>
+            <div class="card border-warning shadow-sm mb-4">
+                <div class="card-body bg-light fs-6 lh-base">
+                    {% for line in documentation.specimen %}
+                        {% if line %}
+                            <div>{{ line }}</div>
+                        {% else %}
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Interpretation -->
+            <h5 class="text-info fw-bold fs-5">Interpretation</h5>
+            <div class="alert alert-info fs-6 lh-base mb-0">
+                {{ documentation.interpretation }}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- Final CO Attainment Level Criteria -->
+    <!-- ======================================================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0 fw-bold fs-5">Final CO Attainment Level Criteria</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-bordered table-striped text-center mb-0">
+                <thead class="table-light fs-6">
+                    <tr>
+                        <th style="width: 50%;">Final CO Attainment (%)</th>
+                        <th style="width: 50%;">Attainment Level</th>
+                    </tr>
+                </thead>
+                <tbody class="fs-6">
+                    <tr>
+                        <td>Below 60</td>
+                        <td>Level 1</td>
+                    </tr>
+                    <tr>
+                        <td>60 – 69.99</td>
+                        <td>Level 2</td>
+                    </tr>
+                    <tr>
+                        <td>70 and Above</td>
+                        <td>Level 3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- Final CO → PO / PSO Contribution -->
+    <!-- ======================================================= -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0 fw-bold fs-5">Final CO → PO / PSO Contribution</h5>
+        </div>
+        <div class="card-body p-0">
             <div class="table-responsive">
-
-                <table class="table table-bordered table-striped table-sm">
-
-                    <thead class="table-light">
+                <table class="table table-bordered table-hover table-striped table-sm align-middle text-center mb-0">
+                    <thead class="table-primary fs-6">
                         <tr>
-                            <th>CO</th>
-                            <th>Final CO Attainment</th>
-                            <th>CO Attainment Level</th>
-
+                            <th rowspan="2" class="align-middle">CO</th>
+                            <th rowspan="2" class="align-middle">Final CO<br>Attainment (%)</th>
+                            <th rowspan="2" class="align-middle">CO<br>Level</th>
+                            <th colspan="12">Program Outcomes (PO)</th>
+                            <th colspan="3">Program Specific Outcomes (PSO)</th>
+                        </tr>
+                        <tr>
                             {% for i in range(1, 13) %}
-                            <th>PO{{ i }}</th>
+                                <th>PO{{ i }}</th>
                             {% endfor %}
-
                             {% for i in range(1, 4) %}
-                            <th>PSO{{ i }}</th>
+                                <th>PSO{{ i }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
-
-                    <tbody>
-
+                    <tbody class="fs-6">
                         {% for row in contribution %}
-
                         <tr>
-                            <td>
-                                <strong>{{ row.co_code }}</strong>
-                            </td>
-
-                            <td class="text-center">
-                                {{ "%.2f"|format(row.co_attainment) }}
-                            </td>
-
-                            <td class="text-center">
-                            {{ "%.2f"|format(row.co_attainment) }}
-                            </td>
+                            <td><strong>{{ row.co_code }}</strong></td>
+                            <td>{{ "%.2f"|format(row.final_percentage|default(0, true)) }}</td>
+                            <td>{{ row.co_attainment }}</td>
+                            
+                            <!-- PO Values -->
                             {% for i in range(1, 13) %}
-                            <td class="text-center">
-                                {{ "%.2f"|format(row["po" ~ i]) }}
-                            </td>
+                                <td>{{ "%.2f"|format(row["po" ~ i]|default(0, true)) }}</td>
                             {% endfor %}
 
+                            <!-- PSO Values -->
                             {% for i in range(1, 4) %}
-                            <td class="text-center">
-                                {{ "%.2f"|format(row["pso" ~ i]) }}
-                            </td>
+                                <td>{{ "%.2f"|format(row["pso" ~ i]|default(0, true)) }}</td>
                             {% endfor %}
-
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
     </div>
 
-    <div class="mt-4">
-
-        <a href="/nba-report8-excel?course_id={{ course_id }}"
-           class="btn btn-success">
-
-            <i class="bi bi-file-earmark-excel"></i>
-            Download Excel
-
-        </a>
-
+    <!-- ======================================================= -->
+    <!-- Report Summary -->
+    <!-- ======================================================= -->
+    <div class="card shadow-sm mt-4 mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0 fw-bold fs-5">Key Highlights</h5>
+        </div>
+        <div class="card-body fs-6 lh-base">
+            <ul class="mb-0">
+                <li>Final CO Attainment is computed by combining <strong>Direct</strong> and <strong>Indirect</strong> attainment.</li>
+                <li>Contribution values are calculated using CO–PO / CO–PSO Mapping Strength.</li>
+                <li>All contribution values are normalized using the maximum mapping available in the corresponding PO / PSO column.</li>
+                <li>This report forms the basis for computing the Final Programme Outcome (PO) and Programme Specific Outcome (PSO) attainment.</li>
+            </ul>
+        </div>
     </div>
 
-</div>
+    <!-- ======================================================= -->
+    <!-- Navigation & Export -->
+    <!-- ======================================================= -->
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+        <a href="/nba-reports?semester={{ semester }}&course_id={{ course_id }}" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left-circle" aria-hidden="true"></i> Back to NBA Reports
+        </a>
+        <a href="/nba-report8-excel?course_id={{ course_id }}" class="btn btn-success btn-lg">
+            <i class="bi bi-file-earmark-excel" aria-hidden="true"></i> Download Excel
+        </a>
+    </div>
 
+    <!-- ======================================================= -->
+    <!-- Footer -->
+    <!-- ======================================================= -->
+    <footer class="card border-0 mt-4">
+        <div class="card-body text-center text-muted">
+            <hr>
+            <p class="small mb-1"><strong>Outcome Based Education Automation System</strong></p>
+            <p class="small mb-0">NBA Accreditation Reporting Module</p>
+        </div>
+    </footer>
+
+</div>
 {% endblock %}
